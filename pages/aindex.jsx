@@ -90,7 +90,7 @@ function Schematic() {
         <line x1="-16" y1="0" x2="16" y2="0" stroke="#9BAAD4" strokeWidth="1.5"/>
         <line x1="-10" y1="7" x2="10" y2="7" stroke="#9BAAD4" strokeWidth="1"/>
         <line x1="-5" y1="14" x2="5" y2="14" stroke="#9BAAD4" strokeWidth="1"/>
-        <text x="20" y="4" fill="rgba(155,170,212,0.5)" fontSize="9" fontFamily="'Share Tech Mono','Courier New',monospace">TIERRA</text>
+        <text x="20" y="4" fill="rgba(155,170,212,0.5)" fontSize="9" fontFamily="'Share Tech Mono','Courier New',monospace">GND</text>
       </g>
 
       {/* Power source */}
@@ -103,7 +103,7 @@ function Schematic() {
       {/* Labels */}
       <text x="218" y="95" fill="rgba(155,170,212,0.35)" fontSize="9" fontFamily="'Share Tech Mono','Courier New',monospace">BUS PRINCIPAL</text>
       <text x="318" y="295" fill="rgba(155,170,212,0.35)" fontSize="9" fontFamily="'Share Tech Mono','Courier New',monospace">CIRC-B</text>
-      <text x="198" y="295" fill="rgba(155,170,212,0.35)" fontSize="9" fontFamily="'Share Tech Mono','Courier New',monospace">NODO</text>
+      <text x="198" y="295" fill="rgba(155,170,212,0.35)" fontSize="9" fontFamily="'Share Tech Mono','Courier New',monospace">NODE</text>
 
       {/* Border */}
       <rect x="1" y="1" width="378" height="518" fill="none" stroke="rgba(43,45,160,0.18)" strokeWidth="1"/>
@@ -121,7 +121,7 @@ function Schematic() {
       <line x1="280" y1="488" x2="378" y2="488" stroke="rgba(43,45,160,0.2)" strokeWidth="0.5"/>
       <text x="286" y="486" fill="rgba(155,170,212,0.4)" fontSize="7" fontFamily="'Share Tech Mono','Courier New',monospace">REV · SELCE-001</text>
       <text x="286" y="498" fill="rgba(155,170,212,0.3)" fontSize="7" fontFamily="'Share Tech Mono','Courier New',monospace">A-2012  B-2018</text>
-      <text x="286" y="512" fill="rgba(181,127,12,0.65)" fontSize="7" fontFamily="'Share Tech Mono','Courier New',monospace">C-2025 VIGENTE ●</text>
+      <text x="286" y="512" fill="rgba(181,127,12,0.65)" fontSize="7" fontFamily="'Share Tech Mono','Courier New',monospace">C-2025 ACTUAL ●</text>
     </svg>
   );
 }
@@ -148,8 +148,8 @@ export default function SelceFinal() {
     { code:"SVC-001", name:"Instalaciones Eléctricas",  sub:"Residencial · Comercial · Industrial", amps:"200A",   volt:"120/240V", desc:"Diseño y construcción de instalaciones eléctricas residenciales, comerciales e industriales. Trabajo limpio, seguro y a código. Entregamos plano actualizado con cada proyecto." },
     { code:"SVC-002", name:"Mantenimiento Preventivo",  sub:"Preventivo · Correctivo · Termografía", amps:"—",     volt:"Multifase", desc:"Programa de mantenimiento preventivo con inspección termográfica, medición de aislamiento y pruebas de continuidad. Detectamos fallas antes de que ocurran." },
     { code:"SVC-003", name:"Proyectos Industriales",    sub:"Plantas · Tableros · Automatización",   amps:"400A+", volt:"480V",      desc:"Diseño e implementación de sistemas eléctricos industriales. Alimentadores, tableros de distribución de alta capacidad, protecciones y automatización." },
-    { code:"SVC-004", name:"Energía Solar",             sub:"Fotovoltaico · En red · Fuera de red",      amps:"—",     volt:"DC/AC",     desc:"Instalación de sistemas fotovoltaicos en red y fuera de red. Estudio de consumo, diseño del array, certificación e integración con EDENORTE. Retorno desde 4 años." },
-    { code:"SVC-005", name:"Hogar Inteligente",                sub:"Automatización · Seguridad · Control",   amps:"20A",   volt:"120V",      desc:"Automatización residencial completa. Control de iluminación, climatización y seguridad desde un solo panel. Compatible con Alexa, Google Home y Apple HomeKit." },
+    { code:"SVC-004", name:"Energía Solar",             sub:"Fotovoltaico · On-grid · Off-grid",      amps:"—",     volt:"DC/AC",     desc:"Instalación de sistemas fotovoltaicos on-grid y off-grid. Estudio de consumo, diseño del array, certificación e integración con EDENORTE. ROI desde 4 años." },
+    { code:"SVC-005", name:"Smart Home",                sub:"Automatización · Seguridad · Control",   amps:"20A",   volt:"120V",      desc:"Automatización residencial completa. Control de iluminación, climatización y seguridad desde un solo panel. Compatible con Alexa, Google Home y Apple HomeKit." },
     { code:"SVC-006", name:"Emergencias 24/7",          sub:"Respuesta < 60 min · Santiago RD",       amps:"—",     volt:"Urgente",   desc:"Unidad de respuesta a emergencias disponible 24/7. Atendemos cortos circuitos, sobretensiones y caídas de tablero en menos de 60 minutos en Santiago." },
   ];
 
@@ -327,37 +327,26 @@ export default function SelceFinal() {
 
         /* ── Responsive ── */
         @media (max-width: 900px) {
-          .hero-cols        { flex-direction: column !important; }
-          .schematic-panel  { display: none !important; }
-          .about-cols       { flex-direction: column !important; }
-          .contact-cols     { flex-direction: column !important; }
-          .stats-row        { grid-template-columns: 1fr 1fr !important; }
-          .svc-row          { grid-template-columns: 1fr 24px !important; gap: 12px !important; padding: 18px 16px !important; }
-          .svc-code         { display: none !important; }
-          .svc-meta         { display: none !important; }
-          .nav-links        { display: none !important; }
-          .mob-toggle       { display: flex !important; }
-          .hero-title       { font-size: clamp(76px, 21vw, 140px) !important; letter-spacing: -2px !important; }
-          .hero-sub         { font-size: clamp(34px, 9vw, 64px) !important; letter-spacing: 6px !important; }
-          .cta-row .btn-gold,
-          .cta-row .btn-outline { width: 100% !important; text-align: center !important; }
-          .cta-row          { flex-direction: column !important; gap: 10px !important; }
-          .footer-row       { flex-direction: column !important; align-items: flex-start !important; gap: 10px !important; }
-          .hero-inner       { min-height: auto !important; gap: 20px !important; }
-          .hero-plano       { display: none !important; }
-          .stat-box         { padding: 26px 18px !important; }
-          .stat-box:nth-child(2n)   { border-right: none !important; }
-          .stat-box:nth-child(2n+1) { border-right: 1px solid rgba(43,45,160,0.2) !important; }
-          .contact-border   { border-right: none !important; border-bottom: 1px solid rgba(43,45,160,0.18) !important; }
-          .emerg-row        { flex-direction: column !important; }
-          .emerg-row .btn-gold { width: 100% !important; text-align: center !important; }
-          .emerg-btns       { flex-direction: column !important; width: 100% !important; }
-          .emerg-btns .btn-gold { width: 100% !important; }
+          .hero-cols  { flex-direction: column !important; }
+          .schematic-panel { display: none !important; }
+          .about-cols { flex-direction: column !important; }
+          .contact-cols { flex-direction: column !important; }
+          .stats-row  { grid-template-columns: 1fr 1fr !important; }
+          .svc-row    { grid-template-columns: 80px 1fr 24px !important; }
+          .svc-code   { display: none !important; }
+          .svc-meta   { display: none !important; }
+          .nav-links  { display: none !important; }
+          .mob-toggle { display: flex !important; }
+          .hero-title { font-size: clamp(80px, 22vw, 160px) !important; }
+          .hero-sub   { font-size: clamp(36px, 10vw, 72px)  !important; }
+          .cta-row    { flex-direction: column !important; }
+          .footer-row { flex-direction: column !important; align-items: flex-start !important; gap: 12px !important; }
         }
         @media (max-width: 540px) {
-          .feat-grid        { grid-template-columns: 1fr 1fr !important; }
-          .form-name-tel    { grid-template-columns: 1fr !important; }
-          .about-big-num    { font-size: clamp(88px, 24vw, 160px) !important; }
+          .stats-row  { grid-template-columns: 1fr 1fr !important; }
+          .stat-box   { padding: 28px 20px !important; border-right: none !important; }
+          .stat-box:nth-child(odd) { border-right: 1px solid rgba(43,45,160,0.2) !important; }
+          .feat-grid  { grid-template-columns: 1fr 1fr !important; }
         }
       `}</style>
 
@@ -425,7 +414,7 @@ export default function SelceFinal() {
         {/* Status bar */}
         <div style={{ padding:"9px clamp(18px,4%,48px)", borderBottom:"1px solid rgba(43,45,160,0.18)", display:"flex", alignItems:"center", gap:"16px", position:"relative", zIndex:2, flexWrap:"wrap", rowGap:"6px" }}>
           <span style={{ width:"6px", height:"6px", borderRadius:"50%", background:"#22C55E", boxShadow:"0 0 8px #22C55E", display:"inline-block", animation:"blink 2s infinite", flexShrink:0 }}/>
-          <span className="ann">SIS: EN LÍNEA · SELCE-SERVICIOS-RD · REV.2025</span>
+          <span className="ann">SYS: ONLINE · SELCE-SERVICIOS-RD · REV.2025</span>
           <span className="ann" style={{ marginLeft:"auto", color:"rgba(181,127,12,0.75)" }}>⚡ EMERGENCIAS: (809) 555-0000</span>
         </div>
 
@@ -433,16 +422,16 @@ export default function SelceFinal() {
         <div style={{ flex:1, display:"flex", position:"relative", zIndex:2 }} className="hero-cols">
 
           {/* Left — Content */}
-          <div className="hero-inner" style={{ flex:1, padding:"clamp(28px,5%,64px) clamp(18px,4%,48px)", display:"flex", flexDirection:"column", justifyContent:"space-between", gap:"clamp(24px,4vh,40px)", minHeight:"85vh" }}>
+          <div style={{ flex:1, padding:"clamp(32px,5%,64px) clamp(18px,4%,48px)", display:"flex", flexDirection:"column", justifyContent:"space-between", minHeight:"85vh" }}>
 
             {/* Top annotations */}
-            <div className="hero-plano" style={{ display:"flex", alignItems:"center", gap:"10px" }}>
+            <div style={{ display:"flex", alignItems:"center", gap:"10px" }}>
               <div style={{ width:"20px", height:"1px", background:"rgba(181,127,12,0.4)" }}/>
               <span className="ann">PLANO: HQ-001 · SANTIAGO, RD</span>
             </div>
 
             {/* Title block */}
-            <div style={{ margin:"0" }}>
+            <div style={{ margin:"clamp(24px,4vh,40px) 0" }}>
               <div className="power-on d1" style={{ marginBottom:"20px" }}>
                 <span className="tag">SERVICIOS ELÉCTRICOS PROFESIONALES</span>
               </div>
@@ -457,23 +446,23 @@ export default function SelceFinal() {
                 fontFamily:"'Bebas Neue','Arial Black',Impact,sans-serif",
                 fontSize:"clamp(36px,8vw,100px)",
                 color:"rgba(155,170,212,0.32)", letterSpacing:"clamp(4px,1.5vw,12px)",
-                marginBottom:"clamp(12px,2vh,24px)", lineHeight:1
+                marginBottom:"clamp(20px,3vh,32px)", lineHeight:1
               }}>SERVICIOS</h2>
 
               {/* Divider */}
-              <div className="power-on d3" style={{ display:"flex", alignItems:"center", gap:"14px", margin:"clamp(10px,1.8vh,22px) 0" }}>
+              <div className="power-on d3" style={{ display:"flex", alignItems:"center", gap:"14px", margin:"clamp(16px,2.5vh,28px) 0" }}>
                 <div style={{ flex:1, height:"1px", background:"linear-gradient(90deg,#B57F0C,rgba(43,45,160,0.3))" }}/>
                 <span className="ann">120/240V · 60Hz · SANTIAGO, RD</span>
               </div>
 
-              <p className="power-on d4" style={{ fontSize:"clamp(13px,1.4vw,15px)", color:"var(--text)", lineHeight:1.8, maxWidth:"540px", letterSpacing:".3px", marginBottom:"clamp(20px,3vh,32px)" }}>
+              <p className="power-on d4" style={{ fontSize:"clamp(12px,1.4vw,15px)", color:"var(--text)", lineHeight:1.85, maxWidth:"540px", letterSpacing:".3px" }}>
                 Empresa de servicios eléctricos con más de 12 años en Santiago. Instalaciones residenciales y comerciales, mantenimiento preventivo, energía solar y emergencias 24/7. Todo trabajo garantizado por escrito.
               </p>
             </div>
 
             {/* CTAs */}
             <div className="power-on d5">
-              <div style={{ display:"flex", gap:"12px", flexWrap:"wrap", alignItems:"stretch", marginBottom:"clamp(10px,1.5vh,16px)" }} className="cta-row">
+              <div style={{ display:"flex", gap:"14px", flexWrap:"wrap", alignItems:"center", marginBottom:"clamp(16px,2vh,24px)" }} className="cta-row">
                 <button className="btn-gold" onClick={() => scrollTo("contacto")}>⚡ COTIZACIÓN GRATIS</button>
                 <button className="btn-outline" onClick={() => scrollTo("servicios")}>VER SERVICIOS</button>
               </div>
@@ -510,7 +499,7 @@ export default function SelceFinal() {
             {/* Stamp */}
             <div style={{ position:"absolute", bottom:"56px", right:"24px", width:"88px", height:"88px", borderRadius:"50%", border:"2px solid rgba(181,127,12,0.35)", display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", animation:"float-y 4s ease-in-out infinite" }}>
               <svg width="18" height="18" viewBox="0 0 24 24" fill="#B57F0C"><path d="M13 2L4.5 13.5H11L10 22L19.5 10.5H13Z"/></svg>
-              <span style={{ fontSize:"7px", letterSpacing:"1.5px", color:"rgba(181,127,12,0.65)", marginTop:"5px", textAlign:"center", lineHeight:1.5, fontFamily:"'Share Tech Mono','Courier New',monospace" }}>CERTIF.<br/>2012</span>
+              <span style={{ fontSize:"7px", letterSpacing:"1.5px", color:"rgba(181,127,12,0.65)", marginTop:"5px", textAlign:"center", lineHeight:1.5, fontFamily:"'Share Tech Mono','Courier New',monospace" }}>CERT.<br/>2012</span>
             </div>
           </div>
         </div>
@@ -533,7 +522,7 @@ export default function SelceFinal() {
 
           <div style={{ display:"flex", alignItems:"baseline", justifyContent:"space-between", marginBottom:"clamp(24px,4vw,40px)", paddingBottom:"16px", borderBottom:"1px solid rgba(43,45,160,0.3)", flexWrap:"wrap", gap:"12px" }}>
             <h2 style={{ fontFamily:"'Bebas Neue','Arial Black',Impact,sans-serif", fontSize:"clamp(36px,6vw,72px)", letterSpacing:"6px", color:"#fff" }}>SERVICIOS</h2>
-            <span className="ann">06 ESPECIALIDADES · FUND. 2012</span>
+            <span className="ann">06 ESPECIALIDADES · EST. 2012</span>
           </div>
 
           {/* Table header — desktop only */}
@@ -617,7 +606,7 @@ export default function SelceFinal() {
 
           {/* Big number */}
           <div style={{ flexShrink:0 }}>
-            <div className="about-big-num" style={{ fontFamily:"'Bebas Neue','Arial Black',Impact,sans-serif", fontSize:"clamp(96px,18vw,220px)", color:"#2B2DA0", lineHeight:0.85, letterSpacing:"-6px" }}>12</div>
+            <div style={{ fontFamily:"'Bebas Neue','Arial Black',Impact,sans-serif", fontSize:"clamp(96px,18vw,220px)", color:"#2B2DA0", lineHeight:0.85, letterSpacing:"-6px" }}>12</div>
             <div className="ann" style={{ marginTop:"14px" }}>AÑOS EN EL MERCADO</div>
             <div style={{ width:"48px", height:"3px", background:"#B57F0C", marginTop:"12px" }}/>
           </div>
@@ -654,22 +643,22 @@ export default function SelceFinal() {
 
       {/* ═══════════════════════════════ EMERGENCY CTA ═══════════════════════ */}
       <div style={{ background:"rgba(181,127,12,0.08)", borderTop:"1px solid rgba(181,127,12,0.2)", borderBottom:"1px solid rgba(181,127,12,0.2)", padding:"clamp(32px,5vw,56px) clamp(18px,4%,48px)" }}>
-        <div style={{ maxWidth:"1200px", margin:"0 auto", display:"flex", alignItems:"center", justifyContent:"space-between", gap:"28px", flexWrap:"wrap" }} className="emerg-row">
+        <div style={{ maxWidth:"1200px", margin:"0 auto", display:"flex", alignItems:"center", justifyContent:"space-between", gap:"32px", flexWrap:"wrap" }}>
           <div>
             <div style={{ display:"flex", alignItems:"center", gap:"10px", marginBottom:"8px" }}>
               <svg width="16" height="16" viewBox="0 0 24 24" fill="#B57F0C"><path d="M13 2L4.5 13.5H11L10 22L19.5 10.5H13Z"/></svg>
               <span className="ann" style={{ color:"#B57F0C" }}>EMERGENCIAS ELÉCTRICAS</span>
             </div>
-            <h3 style={{ fontFamily:"'Bebas Neue','Arial Black',Impact,sans-serif", fontSize:"clamp(26px,4vw,52px)", color:"#fff", letterSpacing:"-0.5px", lineHeight:0.95 }}>
+            <h3 style={{ fontFamily:"'Bebas Neue','Arial Black',Impact,sans-serif", fontSize:"clamp(28px,4vw,52px)", color:"#fff", letterSpacing:"-0.5px", lineHeight:0.95 }}>
               ¿APAGÓN O CORTO CIRCUITO?<br/>RESPONDEMOS EN 60 MINUTOS.
             </h3>
           </div>
-          <div style={{ display:"flex", gap:"12px", flexWrap:"wrap", width:"100%", maxWidth:"360px" }} className="emerg-btns">
-            <a href="tel:+18095550000" style={{ textDecoration:"none", flex:1 }}>
-              <button className="btn-gold" style={{ background:"#fff", color:"#0A0A0A", fontSize:"17px", width:"100%" }}>📞 LLAMAR</button>
+          <div style={{ display:"flex", gap:"12px", flexWrap:"wrap" }}>
+            <a href="tel:+18095550000" style={{ textDecoration:"none" }}>
+              <button className="btn-gold" style={{ background:"#fff", color:"#0A0A0A", fontSize:"17px" }}>📞 LLAMAR AHORA</button>
             </a>
-            <a href="https://wa.me/18095550000" style={{ textDecoration:"none", flex:1 }}>
-              <button className="btn-gold" style={{ background:"#25D366", fontSize:"17px", width:"100%" }}>💬 WHATSAPP</button>
+            <a href="https://wa.me/18095550000" style={{ textDecoration:"none" }}>
+              <button className="btn-gold" style={{ background:"#25D366", fontSize:"17px" }}>💬 WHATSAPP</button>
             </a>
           </div>
         </div>
@@ -680,7 +669,7 @@ export default function SelceFinal() {
         <div style={{ maxWidth:"1200px", margin:"0 auto", display:"flex", flexWrap:"wrap" }} className="contact-cols">
 
           {/* Left info */}
-          <div className="contact-border" style={{ flex:"0 0 clamp(260px,35%,400px)", padding:"clamp(36px,6vw,72px) clamp(18px,4%,40px)", borderRight:"1px solid rgba(43,45,160,0.18)" }}>
+          <div style={{ flex:"0 0 clamp(260px,35%,400px)", padding:"clamp(40px,6vw,72px) clamp(18px,4%,40px)", borderRight:"1px solid rgba(43,45,160,0.18)" }}>
             <span className="tag" style={{ marginBottom:"24px", display:"inline-block" }}>TERMINAL DE CONTACTO</span>
             <h2 style={{ fontFamily:"'Bebas Neue','Arial Black',Impact,sans-serif", fontSize:"clamp(44px,7vw,80px)", color:"#fff", letterSpacing:"2px", lineHeight:0.85, marginBottom:"40px" }}>
               INICIA<br/>EL<br/><span style={{ color:"#B57F0C" }}>CIRCUITO.</span>
@@ -688,7 +677,7 @@ export default function SelceFinal() {
 
             <div style={{ width:"100%", height:"1px", background:"rgba(43,45,160,0.2)", marginBottom:"36px" }}/>
 
-            {[["UBICACIÓN://","Santiago de los Caballeros\nRepública Dominicana"],["TEL://","(809) 555-0000\nEmergencias 24 horas"],["CORREO://","info@selceservicios.com"],["HORARIO://","Lun–Vie 8am–6pm\nSáb 8am–2pm · 24h emergencias"]].map(([k,v]) => (
+            {[["LOC://","Santiago de los Caballeros\nRepública Dominicana"],["TEL://","(809) 555-0000\nEmergencias 24 horas"],["EMAIL://","info@selceservicios.com"],["HORARIO://","Lun–Vie 8am–6pm\nSáb 8am–2pm · 24h emergencias"]].map(([k,v]) => (
               <div key={k} style={{ marginBottom:"28px" }}>
                 <div className="ann" style={{ color:"#B57F0C", marginBottom:"5px" }}>{k}</div>
                 <div style={{ fontSize:"clamp(13px,1.5vw,15px)", color:"#D0D8FF", lineHeight:1.65, whiteSpace:"pre-line" }}>{v}</div>
@@ -696,7 +685,7 @@ export default function SelceFinal() {
             ))}
 
             <div style={{ marginTop:"32px", paddingTop:"28px", borderTop:"1px solid rgba(43,45,160,0.18)" }}>
-              <div className="ann" style={{ marginBottom:"14px" }}>SÍGUENOS EN</div>
+              <div className="ann" style={{ marginBottom:"14px" }}>REDES SOCIALES</div>
               <div style={{ display:"flex", gap:"10px", flexWrap:"wrap" }}>
                 {["Facebook","Instagram","WhatsApp"].map(s => (
                   <button key={s} style={{ background:"none", border:"1px solid rgba(43,45,160,0.35)", color:"rgba(155,170,212,0.55)", padding:"8px 16px", fontFamily:"'Share Tech Mono','Courier New',monospace", fontSize:"11px", letterSpacing:"1px", cursor:"pointer", transition:"all .2s" }}
@@ -722,7 +711,7 @@ export default function SelceFinal() {
                 <span className="tag" style={{ marginBottom:"clamp(24px,3vw,36px)", display:"inline-block" }}>FORMULARIO DE SOLICITUD</span>
                 <div style={{ display:"flex", flexDirection:"column", gap:"clamp(16px,2.5vw,22px)", maxWidth:"520px" }}>
 
-                  <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:"clamp(12px,2vw,18px)" }} className="form-name-tel">
+                  <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:"clamp(12px,2vw,18px)" }}>
                     {[["nombre","// NOMBRE COMPLETO","Juan García"],["tel","// TELÉFONO","809-000-0000"]].map(([k,l,ph]) => (
                       <div key={k}>
                         <label className="ann" style={{ display:"block", marginBottom:"6px" }}>{l}</label>
@@ -746,7 +735,7 @@ export default function SelceFinal() {
 
                   <div style={{ display:"flex", alignItems:"center", gap:"20px", flexWrap:"wrap" }}>
                     <button className="btn-gold" onClick={() => { if(form.nombre && form.tel) setSent(true); }}>
-                      ENVIAR SOLICITUD →
+                      TRANSMITIR →
                     </button>
                     <span className="ann">RESPUESTA &lt; 2H DÍAS HÁBILES</span>
                   </div>
@@ -764,7 +753,7 @@ export default function SelceFinal() {
           <span style={{ fontFamily:"'Bebas Neue','Arial Black',Impact,sans-serif", letterSpacing:"5px", fontSize:"16px", color:"#fff" }}>SELCE SERVICIOS</span>
         </div>
         <span className="ann">© {new Date().getFullYear()} · SANTIAGO DE LOS CABALLEROS · REPÚBLICA DOMINICANA</span>
-        <span className="ann" style={{ color:"#B57F0C", animation:"blink 3s infinite" }}>● SISTEMA EN LÍNEA</span>
+        <span className="ann" style={{ color:"#B57F0C", animation:"blink 3s infinite" }}>● SISTEMA OPERATIVO</span>
       </footer>
 
     </div>
