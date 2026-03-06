@@ -200,6 +200,14 @@ export default function Selce() {
 
   const P = { background:"#070B1A", color:"#E8EAF6", fontFamily:"'DM Sans','Segoe UI',sans-serif", overflowX:"hidden" };
 
+  const [isDesktop, setIsDesktop] = useState(false);
+  useEffect(() => {
+    const check = () => setIsDesktop(window.innerWidth >= 768);
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
+  }, []);
+
   return (
     <div style={P}>
       <style dangerouslySetInnerHTML={{ __html: CSS }} />
@@ -211,25 +219,29 @@ export default function Selce() {
         backdropFilter:"blur(16px)",
         borderBottom:"1px solid rgba(43,45,160,0.2)",
         display:"flex", alignItems:"center",
-        padding:"0 clamp(16px,4%,48px)", gap:"24px",
+        padding:"0 clamp(16px,4%,48px)", gap:"16px",
       }}>
         <button onClick={() => go("inicio")} style={{ background:"none", border:"none", cursor:"pointer", display:"flex", alignItems:"center", gap:"10px", marginRight:"auto" }}>
           <Bolt/>
           <span className="bb" style={{ fontSize:"22px", letterSpacing:"5px", color:"#fff" }}>SELCE</span>
-          <span className="mm" style={{ fontSize:"9px", color:"rgba(232,234,246,0.3)", letterSpacing:"1.5px" }}>SERVICIOS</span>
+          {isDesktop && <span className="mm" style={{ fontSize:"9px", color:"rgba(232,234,246,0.3)", letterSpacing:"1.5px" }}>SERVICIOS</span>}
         </button>
-        <div className="ndl" style={{ alignItems:"center", gap:"28px" }}>
-          {[["servicios","Servicios"],["nosotros","Nosotros"],["contacto","Contacto"]].map(([id,lb]) => (
-            <button key={id} className="na" onClick={() => go(id)}>{lb}</button>
-          ))}
-          <button className="bp" onClick={() => go("contacto")} style={{ padding:"9px 20px", fontSize:"13px" }}>Cotizar</button>
-        </div>
-        <button className="mbt" onClick={() => setMenu(!menu)} style={{
-          background:"none", border:"1px solid rgba(43,45,160,0.4)",
-          color:"#E8EAF6", padding:"7px 14px", fontFamily:"monospace", fontSize:"14px", cursor:"pointer",
-        }}>
-          {menu ? "X" : "="}
-        </button>
+
+        {isDesktop ? (
+          <div style={{ display:"flex", alignItems:"center", gap:"28px" }}>
+            {[["servicios","Servicios"],["nosotros","Nosotros"],["contacto","Contacto"]].map(([id,lb]) => (
+              <button key={id} className="na" onClick={() => go(id)}>{lb}</button>
+            ))}
+            <button className="bp" onClick={() => go("contacto")} style={{ padding:"9px 20px", fontSize:"13px" }}>Cotizar</button>
+          </div>
+        ) : (
+          <button onClick={() => setMenu(!menu)} style={{
+            background:"none", border:"1px solid rgba(43,45,160,0.4)",
+            color:"#E8EAF6", padding:"7px 16px", fontFamily:"monospace", fontSize:"18px", cursor:"pointer", lineHeight:1,
+          }}>
+            {menu ? "✕" : "☰"}
+          </button>
+        )}
       </nav>
 
       {/* MOBILE MENU */}
