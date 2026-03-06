@@ -259,6 +259,13 @@ export default function Selce() {
       {/* HERO */}
       <section id="inicio" className="grd hero" style={{ paddingTop:"56px", position:"relative", overflow:"hidden" }}>
 
+        {/* Circuito mobile background — solo visible en mobile */}
+        {!isDesktop && (
+          <div style={{ position:"absolute", inset:0, zIndex:0, opacity:0.18, pointerEvents:"none" }}>
+            <Circuit/>
+          </div>
+        )}
+
         {/* LEFT */}
         <div style={{ padding:"clamp(40px,6vw,80px) clamp(16px,5%,64px)", display:"flex", flexDirection:"column", justifyContent:"center", position:"relative", zIndex:1 }}>
           <div className="f1" style={{ marginBottom:"20px" }}>
@@ -280,11 +287,11 @@ export default function Selce() {
             <button className="bp" onClick={() => go("contacto")}>Cotizacion Gratis</button>
             <button className="bs" onClick={() => go("servicios")}>Ver Servicios</button>
           </div>
-          <div className="f5" style={{ paddingTop:"24px", borderTop:"1px solid rgba(43,45,160,0.15)", display:"flex", gap:"clamp(20px,4vw,40px)", flexWrap:"wrap" }}>
+          <div className="f5" style={{ paddingTop:"24px", borderTop:"1px solid rgba(43,45,160,0.15)", display:"flex", gap:"clamp(20px,4vw,40px)", flexWrap:"wrap", justifyContent: isDesktop ? "flex-start" : "center" }}>
             {[["500+","Proyectos"],["12","Anos"],["24/7","Disponible"]].map(([v,l]) => (
-              <div key={l}>
-                <div className="bb" style={{ fontSize:"clamp(28px,4vw,38px)", color:"#C8900A", lineHeight:1 }}>{v}</div>
-                <div className="mm" style={{ fontSize:"10px", color:"rgba(232,234,246,0.3)", letterSpacing:"1px", marginTop:"2px" }}>{l}</div>
+              <div key={l} style={{ textAlign: isDesktop ? "left" : "center" }}>
+                <div className="bb" style={{ fontSize: isDesktop ? "clamp(28px,4vw,38px)" : "48px", color:"#C8900A", lineHeight:1 }}>{v}</div>
+                <div className="mm" style={{ fontSize: isDesktop ? "10px" : "12px", color:"rgba(232,234,246,0.4)", letterSpacing:"1px", marginTop:"4px" }}>{l}</div>
               </div>
             ))}
           </div>
