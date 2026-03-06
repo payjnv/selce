@@ -1,570 +1,360 @@
-"use client";
 import { useState, useEffect, useRef } from "react";
 
-// ── Animated counter ────────────────────────────────────────────────────────
-function Counter({ end, suffix = "", duration = 2000 }) {
-  const [v, setV] = useState(0);
-  const ref = useRef();
-  const started = useRef(false);
+const CSS = [
+  "@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500&family=DM+Mono:wght@400;500&display=swap');",
+  "*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}",
+  "html{scroll-behavior:smooth}",
+  "::selection{background:#C8900A;color:#fff}",
+  "::-webkit-scrollbar{width:3px}::-webkit-scrollbar-track{background:#070B1A}::-webkit-scrollbar-thumb{background:#2B2DA0}",
+  ".bb{font-family:'Bebas Neue','Arial Black',Impact,sans-serif!important}",
+  ".mm{font-family:'DM Mono','Courier New',monospace!important}",
+  ".tag{display:inline-flex;align-items:center;gap:6px;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#C8900A;padding:5px 12px;border:1px solid rgba(200,144,10,0.35);line-height:1}",
+  ".bp{display:inline-flex;align-items:center;justify-content:center;gap:8px;background:#C8900A;color:#fff;border:none;padding:14px 28px;font-family:'DM Sans',sans-serif;font-weight:500;font-size:15px;cursor:pointer;transition:background .2s,transform .15s;text-decoration:none;white-space:nowrap}",
+  ".bp:hover{background:#E5A812;transform:translateY(-1px)}",
+  ".bs{display:inline-flex;align-items:center;justify-content:center;gap:8px;background:transparent;color:rgba(232,234,246,0.75);border:1px solid rgba(43,45,160,0.5);padding:13px 28px;font-family:'DM Sans',sans-serif;font-weight:500;font-size:15px;cursor:pointer;transition:border-color .2s,color .2s;white-space:nowrap}",
+  ".bs:hover{border-color:#2B2DA0;color:#fff}",
+  ".inp{width:100%;background:rgba(43,45,160,0.06);border:1px solid rgba(43,45,160,0.3);color:#E8EAF6;font-family:'DM Sans',sans-serif;font-size:14px;padding:14px 16px;outline:none;transition:border-color .2s;border-radius:0;-webkit-appearance:none}",
+  ".inp:focus{border-color:#C8900A}",
+  ".inp::placeholder{color:rgba(43,45,160,0.35)}",
+  ".inp option{background:#0C1128}",
+  ".na{background:none;border:none;color:rgba(232,234,246,0.55);font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;cursor:pointer;padding:4px 0;transition:color .2s;text-transform:uppercase;letter-spacing:.5px}",
+  ".na:hover{color:#fff}",
+  ".grd{background-image:linear-gradient(rgba(43,45,160,0.12) 1px,transparent 1px),linear-gradient(90deg,rgba(43,45,160,0.12) 1px,transparent 1px);background-size:60px 60px}",
+  ".card{border:1px solid rgba(43,45,160,0.2);padding:28px 24px;cursor:pointer;transition:border-color .2s,background .2s;position:relative;overflow:hidden}",
+  ".card:hover{border-color:rgba(43,45,160,0.5);background:rgba(43,45,160,0.04)}",
+  ".card.on{border-color:#C8900A;background:rgba(200,144,10,0.04)}",
+  ".card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:2px;background:#C8900A;transform:scaleY(0);transform-origin:bottom;transition:transform .3s}",
+  ".card:hover::before,.card.on::before{transform:scaleY(1)}",
+  ".st{padding:32px 24px;transition:background .2s}",
+  ".st:hover{background:rgba(43,45,160,0.05)}",
+  "@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}",
+  "@keyframes flow{to{stroke-dashoffset:-67}}",
+  "@keyframes mq{from{transform:translateX(0)}to{transform:translateX(-50%)}}",
+  "@keyframes up{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}",
+  ".f1{animation:up .7s .1s both}.f2{animation:up .7s .3s both}.f3{animation:up .7s .5s both}.f4{animation:up .7s .7s both}.f5{animation:up .7s .9s both}",
+  ".hero{display:flex;flex-direction:column}",
+  ".hero-r{display:none}",
+  ".stats{display:grid;grid-template-columns:1fr 1fr}",
+  ".st{border-bottom:1px solid rgba(43,45,160,0.2)}",
+  ".st:last-child,.st:nth-last-child(2){border-bottom:none}",
+  ".svcs{display:grid;grid-template-columns:1fr;gap:6px}",
+  ".abt{display:flex;flex-direction:column;gap:40px}",
+  ".ctt{display:flex;flex-direction:column}",
+  ".emg{display:flex;flex-direction:column;gap:20px}",
+  ".emgb{display:flex;flex-direction:column;gap:10px;width:100%}",
+  ".emgb a{display:block}",
+  ".emgb .bp{width:100%;justify-content:center}",
+  ".hbtns{display:flex;flex-direction:column;gap:10px;margin-bottom:36px}",
+  ".hbtns .bp,.hbtns .bs{width:100%;justify-content:center}",
+  ".ci{border-bottom:1px solid rgba(43,45,160,0.15)}",
+  ".form2col{display:grid;grid-template-columns:1fr;gap:12px}",
+  "@media(min-width:480px){.form2col{grid-template-columns:1fr 1fr}}",
+  ".mbt{display:flex!important}",
+  "@media(min-width:768px){",
+  ".hero{display:grid;grid-template-columns:1fr 420px}",
+  ".hero-r{display:block!important}",
+  ".stats{grid-template-columns:repeat(4,1fr)}",
+  ".st{border-right:1px solid rgba(43,45,160,0.2);border-bottom:none}",
+  ".st:last-child{border-right:none}",
+  ".svcs{grid-template-columns:1fr 1fr}",
+  ".abt{flex-direction:row;gap:64px;align-items:start}",
+  ".ctt{flex-direction:row;align-items:start}",
+  ".emg{flex-direction:row;align-items:center;justify-content:space-between}",
+  ".emgb{flex-direction:row;width:auto}",
+  ".emgb a{display:inline}",
+  ".emgb .bp{width:auto}",
+  ".hbtns{flex-direction:row;margin-bottom:36px}",
+  ".hbtns .bp,.hbtns .bs{width:auto}",
+  ".ci{border-right:1px solid rgba(43,45,160,0.15);border-bottom:none;min-width:340px}",
+  ".ndl{display:flex!important}",
+  ".mbt{display:none!important}",
+  "}"
+].join("\n");
+
+function Counter({ to, suffix }) {
+  const [n, setN] = useState(0);
+  const el = useRef(null);
+  const done = useRef(false);
   useEffect(() => {
-    const obs = new IntersectionObserver(([e]) => {
-      if (e.isIntersecting && !started.current) {
-        started.current = true;
-        const t0 = Date.now();
-        const tick = () => {
-          const p = Math.min((Date.now() - t0) / duration, 1);
-          setV(Math.floor((1 - Math.pow(1 - p, 3)) * end));
-          if (p < 1) requestAnimationFrame(tick);
-        };
-        requestAnimationFrame(tick);
-      }
-    }, { threshold: 0.5 });
-    if (ref.current) obs.observe(ref.current);
-    return () => obs.disconnect();
-  }, []);
-  return <span ref={ref}>{v}{suffix}</span>;
+    const io = new IntersectionObserver(([e]) => {
+      if (!e.isIntersecting || done.current) return;
+      done.current = true;
+      const t0 = performance.now();
+      const tick = (now) => {
+        const p = Math.min((now - t0) / 1800, 1);
+        setN(Math.floor((1 - Math.pow(1 - p, 4)) * to));
+        if (p < 1) requestAnimationFrame(tick);
+      };
+      requestAnimationFrame(tick);
+    }, { threshold: 0.4 });
+    if (el.current) io.observe(el.current);
+    return () => io.disconnect();
+  }, [to]);
+  return <span ref={el}>{n}{suffix}</span>;
 }
 
-// ── SVG Circuit schematic (desktop hero right panel) ──────────────────────
-function Schematic() {
+const SVCS = [
+  { n:"01", t:"Instalaciones Eléctricas", d:"Residencial, comercial e industrial. Trabajo a código, garantía escrita y plano técnico en cada proyecto.", i:"M13 2L4.5 13.5H11L10 22L19.5 10.5H13Z" },
+  { n:"02", t:"Mantenimiento Preventivo", d:"Inspección termográfica, medición de aislamiento y pruebas de continuidad. Detectamos fallas antes de que ocurran.", i:"M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z" },
+  { n:"03", t:"Proyectos Industriales", d:"Tableros de alta capacidad, alimentadores, protecciones y automatización para plantas y fábricas.", i:"M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 14l-5-5 1.41-1.41L12 14.17l7.59-7.59L21 8l-9 9z" },
+  { n:"04", t:"Energia Solar", d:"Sistemas fotovoltaicos en red y fuera de red. Estudio de consumo, diseño, certificación e integración con EDENORTE.", i:"M12 7c-2.76 0-5 2.24-5 5s2.24 5 5 5 5-2.24 5-5-2.24-5-5-5zM2 13h2c.55 0 1-.45 1-1s-.45-1-1-1H2c-.55 0-1 .45-1 1s.45 1 1 1zm18 0h2c.55 0 1-.45 1-1s-.45-1-1-1h-2c-.55 0-1 .45-1 1s.45 1 1 1z" },
+  { n:"05", t:"Hogar Inteligente", d:"Automatización de iluminación, climatización y seguridad. Compatible con Alexa, Google Home y Apple HomeKit.", i:"M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" },
+  { n:"06", t:"Emergencias 24/7", d:"Respuesta en menos de 60 minutos en Santiago. Cortos circuitos, sobretensiones y caidas de tablero a cualquier hora.", i:"M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z" },
+];
+
+function Bolt() {
   return (
-    <svg width="100%" height="100%" viewBox="0 0 380 520" preserveAspectRatio="xMidYMid meet" fill="none">
-      <defs>
-        <marker id="arr" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto">
-          <path d="M0,0 L6,3 L0,6 Z" fill="rgba(181,127,12,0.5)" />
-        </marker>
-      </defs>
-      {/* Grid reference lines */}
-      {[80,160,240,320].map(x => <line key={`gx${x}`} x1={x} y1="0" x2={x} y2="520" stroke="rgba(43,45,160,0.1)" strokeWidth="0.5" strokeDasharray="3 8"/>)}
-      {[80,160,240,320,400,480].map(y => <line key={`gy${y}`} x1="0" y1={y} x2="380" y2={y} stroke="rgba(43,45,160,0.1)" strokeWidth="0.5" strokeDasharray="3 8"/>)}
-
-      {/* Main current path 1 */}
-      <path d="M 30 100 L 190 100 L 190 200" stroke="rgba(255,255,255,0.06)" strokeWidth="1.5" fill="none"/>
-      <path d="M 30 100 L 190 100 L 190 200" stroke="#B57F0C" strokeWidth="1.5" fill="none" strokeDasharray="12 60" style={{animation:"dash-flow 4s linear infinite"}}/>
-
-      {/* Main current path 2 */}
-      <path d="M 190 200 L 190 300 L 310 300" stroke="rgba(255,255,255,0.06)" strokeWidth="1.5" fill="none"/>
-      <path d="M 190 200 L 190 300 L 310 300" stroke="#B57F0C" strokeWidth="1.5" fill="none" strokeDasharray="12 60" style={{animation:"dash-flow 3s linear 0.6s infinite"}}/>
-
-      {/* Branch path */}
-      <path d="M 190 300 L 190 400 L 80 400" stroke="rgba(255,255,255,0.06)" strokeWidth="1.5" fill="none"/>
-      <path d="M 190 300 L 190 400 L 80 400" stroke="rgba(43,45,160,0.7)" strokeWidth="1.5" fill="none" strokeDasharray="12 60" style={{animation:"dash-flow 3.5s linear 1s infinite"}}/>
-
-      {/* Return path */}
-      <path d="M 310 300 L 350 300 L 350 400 L 80 400" stroke="rgba(255,255,255,0.06)" strokeWidth="1.5" fill="none"/>
-      <path d="M 310 300 L 350 300 L 350 400 L 80 400" stroke="rgba(43,45,160,0.6)" strokeWidth="1.5" fill="none" strokeDasharray="12 60" style={{animation:"dash-flow 5s linear 0.3s infinite"}}/>
-
-      {/* Resistor at top */}
-      <g transform="translate(60,100)" opacity="0.65">
-        <line x1="-22" y1="0" x2="-8" y2="0" stroke="#B57F0C" strokeWidth="1"/>
-        <rect x="-8" y="-6" width="16" height="12" fill="none" stroke="#B57F0C" strokeWidth="1"/>
-        <line x1="8" y1="0" x2="22" y2="0" stroke="#B57F0C" strokeWidth="1"/>
-        <text x="0" y="20" textAnchor="middle" fill="rgba(181,127,12,0.65)" fontSize="8" fontFamily="'Share Tech Mono','Courier New',monospace">R1 10Ω</text>
-      </g>
-
-      {/* Capacitor */}
-      <g transform="translate(310,260)" opacity="0.55">
-        <line x1="-18" y1="0" x2="-3" y2="0" stroke="#B57F0C" strokeWidth="1"/>
-        <line x1="-3" y1="-9" x2="-3" y2="9" stroke="#B57F0C" strokeWidth="1.5"/>
-        <line x1="3" y1="-9" x2="3" y2="9" stroke="#B57F0C" strokeWidth="1.5"/>
-        <line x1="3" y1="0" x2="18" y2="0" stroke="#B57F0C" strokeWidth="1"/>
-        <text x="0" y="20" textAnchor="middle" fill="rgba(181,127,12,0.6)" fontSize="8" fontFamily="'Share Tech Mono','Courier New',monospace">C1 100µF</text>
-      </g>
-
-      {/* Resistor at bottom */}
-      <g transform="translate(160,400)" opacity="0.6">
-        <line x1="-22" y1="0" x2="-8" y2="0" stroke="#B57F0C" strokeWidth="1"/>
-        <rect x="-8" y="-6" width="16" height="12" fill="none" stroke="#B57F0C" strokeWidth="1"/>
-        <line x1="8" y1="0" x2="22" y2="0" stroke="#B57F0C" strokeWidth="1"/>
-        <text x="0" y="20" textAnchor="middle" fill="rgba(181,127,12,0.6)" fontSize="8" fontFamily="'Share Tech Mono','Courier New',monospace">R2 22Ω</text>
-      </g>
-
-      {/* Junction nodes */}
-      {[[190,200],[190,300],[80,400],[310,300]].map(([cx,cy]) => (
-        <circle key={`${cx}${cy}`} cx={cx} cy={cy} r="4.5" fill="#B57F0C" style={{filter:"drop-shadow(0 0 5px rgba(181,127,12,0.9))"}}/>
-      ))}
-
-      {/* Ground */}
-      <g transform="translate(190,460)" opacity="0.55">
-        <line x1="0" y1="-22" x2="0" y2="0" stroke="#9BAAD4" strokeWidth="1"/>
-        <line x1="-16" y1="0" x2="16" y2="0" stroke="#9BAAD4" strokeWidth="1.5"/>
-        <line x1="-10" y1="7" x2="10" y2="7" stroke="#9BAAD4" strokeWidth="1"/>
-        <line x1="-5" y1="14" x2="5" y2="14" stroke="#9BAAD4" strokeWidth="1"/>
-        <text x="20" y="4" fill="rgba(155,170,212,0.5)" fontSize="9" fontFamily="'Share Tech Mono','Courier New',monospace">TIERRA</text>
-      </g>
-
-      {/* Power source */}
-      <g transform="translate(30,100)">
-        <circle cx="0" cy="0" r="16" fill="none" stroke="rgba(43,45,160,0.6)" strokeWidth="1"/>
-        <text x="0" y="-22" textAnchor="middle" fill="rgba(155,170,212,0.45)" fontSize="9" fontFamily="'Share Tech Mono','Courier New',monospace">VAC</text>
-        <text x="0" y="4" textAnchor="middle" fill="#B57F0C" fontSize="14">⚡</text>
-      </g>
-
-      {/* Labels */}
-      <text x="218" y="95" fill="rgba(155,170,212,0.35)" fontSize="9" fontFamily="'Share Tech Mono','Courier New',monospace">BUS PRINCIPAL</text>
-      <text x="318" y="295" fill="rgba(155,170,212,0.35)" fontSize="9" fontFamily="'Share Tech Mono','Courier New',monospace">CIRC-B</text>
-      <text x="198" y="295" fill="rgba(155,170,212,0.35)" fontSize="9" fontFamily="'Share Tech Mono','Courier New',monospace">NODO</text>
-
-      {/* Border */}
-      <rect x="1" y="1" width="378" height="518" fill="none" stroke="rgba(43,45,160,0.18)" strokeWidth="1"/>
-
-      {/* Corner ticks */}
-      {[[0,0],[1,0],[0,1],[1,1]].map(([fx,fy],i) => (
-        <g key={i} transform={`translate(${fx*380},${fy*520})`}>
-          <line x1={fx===0?1:-1} y1={fy===0?16:-16} x2={fx===0?1:-1} y2={fy===0?1:-1} stroke="rgba(181,127,12,0.4)" strokeWidth="1"/>
-          <line x1={fx===0?1:16} y1={fy===0?1:-1} x2={fx===0?16:1} y2={fy===0?1:-1} stroke="rgba(181,127,12,0.4)" strokeWidth="1"/>
-        </g>
-      ))}
-
-      {/* Revision block */}
-      <rect x="280" y="478" width="98" height="40" fill="none" stroke="rgba(43,45,160,0.25)" strokeWidth="1"/>
-      <line x1="280" y1="488" x2="378" y2="488" stroke="rgba(43,45,160,0.2)" strokeWidth="0.5"/>
-      <text x="286" y="486" fill="rgba(155,170,212,0.4)" fontSize="7" fontFamily="'Share Tech Mono','Courier New',monospace">REV · SELCE-001</text>
-      <text x="286" y="498" fill="rgba(155,170,212,0.3)" fontSize="7" fontFamily="'Share Tech Mono','Courier New',monospace">A-2012  B-2018</text>
-      <text x="286" y="512" fill="rgba(181,127,12,0.65)" fontSize="7" fontFamily="'Share Tech Mono','Courier New',monospace">C-2025 VIGENTE ●</text>
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="#C8900A">
+      <path d="M13 2L4.5 13.5H11L10 22L19.5 10.5H13Z"/>
     </svg>
   );
 }
 
-export default function SelceFinal() {
-  const [scrollY, setScrollY]     = useState(0);
-  const [menuOpen, setMenuOpen]   = useState(false);
-  const [activeIdx, setActiveIdx] = useState(null);
-  const [sent, setSent]           = useState(false);
-  const [form, setForm]           = useState({ nombre:"", tel:"", servicio:"", msg:"" });
+function Circuit() {
+  const pts = [[220,80],[220,200],[220,340],[100,480],[340,340]];
+  const corners = [[0,0,1,1],[1,0,-1,1],[0,1,1,-1],[1,1,-1,-1]];
+  return (
+    <svg width="100%" height="100%" viewBox="0 0 400 700"
+      preserveAspectRatio="xMidYMid slice" fill="none"
+      style={{ position:"absolute", inset:0, width:"100%", height:"100%", opacity:0.65 }}>
+      {[0,60,120,180,240,300,360].map(x =>
+        <line key={"gx"+x} x1={x} y1="0" x2={x} y2="700" stroke="rgba(43,45,160,0.15)" strokeWidth="0.5"/>
+      )}
+      {[0,60,120,180,240,300,360,420,480,540,600,660].map(y =>
+        <line key={"gy"+y} x1="0" y1={y} x2="400" y2={y} stroke="rgba(43,45,160,0.15)" strokeWidth="0.5"/>
+      )}
+      <path d="M60 80 L220 80 L220 200" stroke="#2B2DA0" strokeWidth="1.5" opacity="0.7"/>
+      <path d="M60 80 L220 80 L220 200" stroke="#C8900A" strokeWidth="1.5" strokeDasharray="12 55" style={{animation:"flow 3.5s linear infinite"}}/>
+      <path d="M220 200 L220 340 L340 340" stroke="#2B2DA0" strokeWidth="1.5" opacity="0.6"/>
+      <path d="M220 200 L220 340 L340 340" stroke="#C8900A" strokeWidth="1.5" strokeDasharray="12 55" style={{animation:"flow 4.5s linear 0.8s infinite"}}/>
+      <path d="M220 340 L220 480 L100 480" stroke="#2B2DA0" strokeWidth="1.2" opacity="0.5"/>
+      <path d="M220 340 L220 480 L100 480" stroke="#C8900A" strokeWidth="1.2" strokeDasharray="10 50" style={{animation:"flow 5s linear 0.4s infinite"}} opacity="0.7"/>
+      <path d="M340 340 L340 560 L60 560 L60 640" stroke="#2B2DA0" strokeWidth="1" opacity="0.35"/>
+      <path d="M60 80 L60 200 L140 200" stroke="#2B2DA0" strokeWidth="1" opacity="0.3"/>
+      <path d="M100 480 L100 620 L280 620" stroke="#2B2DA0" strokeWidth="0.8" opacity="0.2"/>
+      {pts.map(([cx,cy]) =>
+        <circle key={cx+","+cy} cx={cx} cy={cy} r="5.5" fill="#C8900A" style={{filter:"drop-shadow(0 0 7px rgba(200,144,10,0.8))"}}/>
+      )}
+      <g transform="translate(140,80)" opacity="0.85">
+        <line x1="-35" y1="0" x2="-12" y2="0" stroke="#C8900A" strokeWidth="1.5"/>
+        <rect x="-12" y="-8" width="24" height="16" fill="none" stroke="#C8900A" strokeWidth="1.5"/>
+        <line x1="12" y1="0" x2="35" y2="0" stroke="#C8900A" strokeWidth="1.5"/>
+        <text x="0" y="26" textAnchor="middle" fill="rgba(200,144,10,0.6)" fontSize="10" fontFamily="monospace">R1</text>
+      </g>
+      <g transform="translate(200,480)" opacity="0.6">
+        <line x1="-30" y1="0" x2="-10" y2="0" stroke="#C8900A" strokeWidth="1.2"/>
+        <rect x="-10" y="-7" width="20" height="14" fill="none" stroke="#C8900A" strokeWidth="1.2"/>
+        <line x1="10" y1="0" x2="30" y2="0" stroke="#C8900A" strokeWidth="1.2"/>
+        <text x="0" y="24" textAnchor="middle" fill="rgba(200,144,10,0.5)" fontSize="9" fontFamily="monospace">R2</text>
+      </g>
+      <g transform="translate(340,440)" opacity="0.75">
+        <line x1="0" y1="-32" x2="0" y2="-9" stroke="#C8900A" strokeWidth="1.5"/>
+        <line x1="-14" y1="-9" x2="14" y2="-9" stroke="#C8900A" strokeWidth="2.5"/>
+        <line x1="-14" y1="-2" x2="14" y2="-2" stroke="#C8900A" strokeWidth="2.5"/>
+        <line x1="0" y1="-2" x2="0" y2="32" stroke="#C8900A" strokeWidth="1.5"/>
+        <text x="22" y="4" fill="rgba(200,144,10,0.55)" fontSize="10" fontFamily="monospace">C1</text>
+      </g>
+      <g transform="translate(60,640)" opacity="0.55">
+        <line x1="0" y1="-24" x2="0" y2="0" stroke="#9BA0D0" strokeWidth="1.5"/>
+        <line x1="-18" y1="0" x2="18" y2="0" stroke="#9BA0D0" strokeWidth="2.5"/>
+        <line x1="-12" y1="8" x2="12" y2="8" stroke="#9BA0D0" strokeWidth="1.8"/>
+        <line x1="-6" y1="16" x2="6" y2="16" stroke="#9BA0D0" strokeWidth="1.2"/>
+        <text x="26" y="4" fill="rgba(155,160,208,0.4)" fontSize="10" fontFamily="monospace">GND</text>
+      </g>
+      <g transform="translate(60,80)">
+        <circle cx="0" cy="0" r="22" fill="none" stroke="rgba(43,45,160,0.7)" strokeWidth="1.8"/>
+        <text x="0" y="6" textAnchor="middle" fill="#C8900A" fontSize="16" fontFamily="monospace">~</text>
+        <text x="0" y="-28" textAnchor="middle" fill="rgba(200,144,10,0.55)" fontSize="10" fontFamily="monospace">VAC</text>
+      </g>
+      <text x="236" y="76" fill="rgba(232,234,246,0.2)" fontSize="10" fontFamily="monospace">BUS PRINCIPAL</text>
+      <text x="236" y="336" fill="rgba(232,234,246,0.15)" fontSize="10" fontFamily="monospace">RAMAL-B</text>
+      <text x="116" y="476" fill="rgba(232,234,246,0.12)" fontSize="10" fontFamily="monospace">NODO-C</text>
+      <rect x="2" y="2" width="396" height="696" fill="none" stroke="rgba(43,45,160,0.12)" strokeWidth="1"/>
+      {corners.map(([fx,fy,sx,sy],i) => (
+        <g key={"corner"+i} transform={"translate("+(fx*400)+","+(fy*700)+")"}>
+          <line x1={sx*2} y1={sy*18} x2={sx*2} y2={sy*2} stroke="rgba(200,144,10,0.3)" strokeWidth="1"/>
+          <line x1={sx*2} y1={sy*2} x2={sx*18} y2={sy*2} stroke="rgba(200,144,10,0.3)" strokeWidth="1"/>
+        </g>
+      ))}
+    </svg>
+  );
+}
+
+export default function Selce() {
+  const [menu, setMenu] = useState(false);
+  const [open, setOpen] = useState(null);
+  const [sent, setSent] = useState(false);
+  const [form, setForm] = useState({ nombre:"", tel:"", servicio:"", msg:"" });
+  const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
-    const fn = () => setScrollY(window.scrollY);
+    const fn = () => setScrolled(window.scrollY > 40);
     window.addEventListener("scroll", fn, { passive: true });
     return () => window.removeEventListener("scroll", fn);
   }, []);
 
-  const scrollTo = (id) => {
+  const go = (id) => {
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
-    setMenuOpen(false);
+    setMenu(false);
   };
 
-  const services = [
-    { code:"SVC-001", name:"Instalaciones Eléctricas",  sub:"Residencial · Comercial · Industrial", amps:"200A",   volt:"120/240V", desc:"Diseño y construcción de instalaciones eléctricas residenciales, comerciales e industriales. Trabajo limpio, seguro y a código. Entregamos plano actualizado con cada proyecto." },
-    { code:"SVC-002", name:"Mantenimiento Preventivo",  sub:"Preventivo · Correctivo · Termografía", amps:"—",     volt:"Multifase", desc:"Programa de mantenimiento preventivo con inspección termográfica, medición de aislamiento y pruebas de continuidad. Detectamos fallas antes de que ocurran." },
-    { code:"SVC-003", name:"Proyectos Industriales",    sub:"Plantas · Tableros · Automatización",   amps:"400A+", volt:"480V",      desc:"Diseño e implementación de sistemas eléctricos industriales. Alimentadores, tableros de distribución de alta capacidad, protecciones y automatización." },
-    { code:"SVC-004", name:"Energía Solar",             sub:"Fotovoltaico · En red · Fuera de red",      amps:"—",     volt:"DC/AC",     desc:"Instalación de sistemas fotovoltaicos en red y fuera de red. Estudio de consumo, diseño del array, certificación e integración con EDENORTE. Retorno desde 4 años." },
-    { code:"SVC-005", name:"Hogar Inteligente",                sub:"Automatización · Seguridad · Control",   amps:"20A",   volt:"120V",      desc:"Automatización residencial completa. Control de iluminación, climatización y seguridad desde un solo panel. Compatible con Alexa, Google Home y Apple HomeKit." },
-    { code:"SVC-006", name:"Emergencias 24/7",          sub:"Respuesta < 60 min · Santiago RD",       amps:"—",     volt:"Urgente",   desc:"Unidad de respuesta a emergencias disponible 24/7. Atendemos cortos circuitos, sobretensiones y caídas de tablero en menos de 60 minutos en Santiago." },
-  ];
-
-  const scrolled = scrollY > 50;
+  const P = { background:"#070B1A", color:"#E8EAF6", fontFamily:"'DM Sans','Segoe UI',sans-serif", overflowX:"hidden" };
 
   return (
-    <div style={{ background:"#05091C", color:"#D0D8FF", fontFamily:"'Share Tech Mono','Courier New',monospace", overflowX:"hidden" }}>
+    <div style={P}>
+      <style dangerouslySetInnerHTML={{ __html: CSS }} />
 
-      {/* ── GLOBAL STYLES ── */}
-      <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Share+Tech+Mono&display=swap');
-        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-        html { scroll-behavior: smooth; }
-        ::selection { background: #B57F0C; color: #000; }
-        ::-webkit-scrollbar { width: 4px; }
-        ::-webkit-scrollbar-track { background: #05091C; }
-        ::-webkit-scrollbar-thumb { background: #2B2DA0; border-radius: 2px; }
-
-        :root {
-          --blue:    #2B2DA0;
-          --blue2:   #3D3FC4;
-          --gold:    #B57F0C;
-          --gold2:   #D4960E;
-          --bg:      #05091C;
-          --bg2:     rgba(43,45,160,0.06);
-          --line:    rgba(43,45,160,0.22);
-          --linefaint: rgba(43,45,160,0.10);
-          --text:    rgba(155,170,212,0.75);
-          --bright:  #D0D8FF;
-          --grid-big: 100px;
-          --grid-sm:  20px;
-        }
-
-        /* Blueprint grid */
-        .bp-grid {
-          background-image:
-            linear-gradient(var(--line) 1px, transparent 1px),
-            linear-gradient(90deg, var(--line) 1px, transparent 1px),
-            linear-gradient(var(--linefaint) 1px, transparent 1px),
-            linear-gradient(90deg, var(--linefaint) 1px, transparent 1px);
-          background-size: var(--grid-big) var(--grid-big), var(--grid-big) var(--grid-big), var(--grid-sm) var(--grid-sm), var(--grid-sm) var(--grid-sm);
-        }
-
-        /* ── Keyframes ── */
-        @keyframes dash-flow   { to { stroke-dashoffset: -72; } }
-        @keyframes blink       { 0%,100%{opacity:1} 50%{opacity:0} }
-        @keyframes scan        { 0%{top:-2px} 100%{top:100%} }
-        @keyframes glow-gold   { 0%,100%{text-shadow:0 0 10px rgba(181,127,12,0.35)} 50%{text-shadow:0 0 28px rgba(181,127,12,0.85),0 0 56px rgba(181,127,12,0.25)} }
-        @keyframes power-on    { 0%{opacity:0;filter:blur(6px)} 60%{opacity:1;filter:blur(0)} 65%{opacity:.35} 70%{opacity:1} 100%{opacity:1} }
-        @keyframes fadein      { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
-        @keyframes float-y     { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
-        @keyframes spin-slow   { to{transform:rotate(360deg)} }
-        @keyframes shimmer     { 0%{background-position:-200% center} 100%{background-position:200% center} }
-        @keyframes marquee     { from{transform:translateX(0)} to{transform:translateX(-50%)} }
-
-        .power-on { animation: power-on 1.2s ease forwards; opacity:0; }
-        .d1{animation-delay:.1s} .d2{animation-delay:.35s} .d3{animation-delay:.6s} .d4{animation-delay:.85s} .d5{animation-delay:1.1s}
-
-        /* ── Reusable ── */
-        .bebas { font-family:'Bebas Neue','Arial Black',Impact,sans-serif !important; }
-        .mono  { font-family:'Share Tech Mono','Courier New',monospace !important; }
-
-        .tag {
-          border: 1px solid rgba(181,127,12,0.45);
-          padding: 4px 12px;
-          font-size: 10px;
-          letter-spacing: 2px;
-          color: rgba(181,127,12,0.9);
-          display: inline-block;
-          font-family:'Share Tech Mono','Courier New',monospace;
-        }
-
-        .ann {
-          font-size: 10px;
-          letter-spacing: 1.5px;
-          color: rgba(155,170,212,0.5);
-          font-family:'Share Tech Mono','Courier New',monospace;
-        }
-
-        /* ── Buttons ── */
-        .btn-gold {
-          background: #B57F0C;
-          color: #fff;
-          border: none;
-          padding: 15px 36px;
-          font-family:'Bebas Neue','Arial Black',Impact,sans-serif;
-          font-size: 20px;
-          letter-spacing: 3px;
-          cursor: pointer;
-          transition: background .2s, box-shadow .2s;
-          position: relative; overflow: hidden;
-        }
-        .btn-gold::after {
-          content:''; position:absolute; inset:0;
-          background: linear-gradient(90deg,transparent,rgba(255,255,255,0.18),transparent);
-          transform: translateX(-100%); transition: transform .4s;
-        }
-        .btn-gold:hover::after { transform: translateX(100%); }
-        .btn-gold:hover { background: #D4960E; box-shadow: 0 0 24px rgba(181,127,12,0.45); }
-
-        .btn-outline {
-          background: transparent;
-          color: rgba(100,110,200,0.9);
-          border: 1px solid #2B2DA0;
-          padding: 14px 36px;
-          font-family:'Bebas Neue','Arial Black',Impact,sans-serif;
-          font-size: 20px;
-          letter-spacing: 3px;
-          cursor: pointer;
-          transition: all .2s;
-        }
-        .btn-outline:hover { background: rgba(43,45,160,0.2); border-color: #4547D4; color: #fff; }
-
-        /* ── Service rows ── */
-        .svc-row {
-          border: 1px solid rgba(43,45,160,0.25);
-          padding: 24px 28px;
-          cursor: pointer;
-          transition: border-color .2s, background .2s;
-          position: relative; overflow: hidden;
-          display: grid;
-          gap: 20px;
-          align-items: center;
-        }
-        .svc-row::before {
-          content:''; position:absolute; left:0; top:0; bottom:0;
-          width:0; background:rgba(43,45,160,0.1);
-          transition: width .3s;
-        }
-        .svc-row:hover::before  { width:100%; }
-        .svc-row:hover          { border-color: rgba(43,45,160,0.55); }
-        .svc-row.open           { border-color: #B57F0C; background: rgba(181,127,12,0.04); }
-
-        /* ── Form inputs ── */
-        .inp {
-          width: 100%;
-          background: rgba(43,45,160,0.08);
-          border: 1px solid rgba(43,45,160,0.35);
-          color: #D0D8FF;
-          font-family:'Share Tech Mono','Courier New',monospace;
-          font-size: 13px;
-          padding: 12px 16px;
-          outline: none;
-          transition: border-color .2s, box-shadow .2s;
-          letter-spacing: .5px;
-          border-radius: 0;
-        }
-        .inp:focus { border-color: #B57F0C; box-shadow: 0 0 0 1px rgba(181,127,12,0.2); }
-        .inp::placeholder { color: rgba(43,45,160,0.5); }
-
-        /* ── Nav link ── */
-        .nav-lnk {
-          background: none; border: none;
-          color: rgba(155,170,212,0.65);
-          font-family:'Share Tech Mono','Courier New',monospace;
-          font-size: 11px; letter-spacing: 2px;
-          text-transform: uppercase; cursor: pointer;
-          transition: color .2s;
-          padding: 4px 0;
-          position: relative;
-        }
-        .nav-lnk::after { content:''; position:absolute; bottom:-2px; left:0; width:0; height:1px; background:#B57F0C; transition:width .3s; }
-        .nav-lnk:hover { color:#B57F0C; }
-        .nav-lnk:hover::after { width:100%; }
-
-        /* ── Stat box ── */
-        .stat-box {
-          padding: 40px 32px;
-          border-right: 1px solid rgba(43,45,160,0.2);
-          position: relative;
-          transition: background .25s;
-        }
-        .stat-box:hover { background: rgba(43,45,160,0.06); }
-        .stat-box:last-child { border-right: none; }
-
-        /* ── Responsive ── */
-        @media (max-width: 900px) {
-          .hero-cols        { flex-direction: column !important; }
-          .schematic-panel  { display: none !important; }
-          .about-cols       { flex-direction: column !important; }
-          .contact-cols     { flex-direction: column !important; }
-          .stats-row        { grid-template-columns: 1fr 1fr !important; }
-          .svc-row          { grid-template-columns: 1fr 24px !important; gap: 12px !important; padding: 18px 16px !important; }
-          .svc-code         { display: none !important; }
-          .svc-meta         { display: none !important; }
-          .nav-links        { display: none !important; }
-          .mob-toggle       { display: flex !important; }
-          .hero-title       { font-size: clamp(76px, 21vw, 140px) !important; letter-spacing: -2px !important; }
-          .hero-sub         { font-size: clamp(34px, 9vw, 64px) !important; letter-spacing: 6px !important; }
-          .cta-row .btn-gold,
-          .cta-row .btn-outline { width: 100% !important; text-align: center !important; }
-          .cta-row          { flex-direction: column !important; gap: 10px !important; }
-          .footer-row       { flex-direction: column !important; align-items: flex-start !important; gap: 10px !important; }
-          .hero-inner       { min-height: auto !important; gap: 20px !important; }
-          .hero-plano       { display: none !important; }
-          .stat-box         { padding: 26px 18px !important; }
-          .stat-box:nth-child(2n)   { border-right: none !important; }
-          .stat-box:nth-child(2n+1) { border-right: 1px solid rgba(43,45,160,0.2) !important; }
-          .contact-border   { border-right: none !important; border-bottom: 1px solid rgba(43,45,160,0.18) !important; }
-          .emerg-row        { flex-direction: column !important; }
-          .emerg-row .btn-gold { width: 100% !important; text-align: center !important; }
-          .emerg-btns       { flex-direction: column !important; width: 100% !important; }
-          .emerg-btns .btn-gold { width: 100% !important; }
-        }
-        @media (max-width: 540px) {
-          .feat-grid        { grid-template-columns: 1fr 1fr !important; }
-          .form-name-tel    { grid-template-columns: 1fr !important; }
-          .about-big-num    { font-size: clamp(88px, 24vw, 160px) !important; }
-        }
-      `}</style>
-
-      {/* ═══════════════════════════════ NAVBAR ══════════════════════════════ */}
+      {/* NAV */}
       <nav style={{
-        position:"fixed", top:0, left:0, right:0, zIndex:200,
-        height:"54px",
-        background: scrolled ? "rgba(5,9,28,0.97)" : "rgba(5,9,28,0.7)",
-        backdropFilter:"blur(14px)",
-        borderBottom:"1px solid rgba(43,45,160,0.28)",
-        display:"flex", alignItems:"center", padding:"0 clamp(18px,4%,48px)",
-        transition:"background .35s",
-        boxShadow: scrolled ? "0 2px 24px rgba(0,0,0,0.5)" : "none",
+        position:"fixed", top:0, left:0, right:0, zIndex:100, height:"56px",
+        background: scrolled ? "rgba(7,11,26,0.97)" : "rgba(7,11,26,0.85)",
+        backdropFilter:"blur(16px)",
+        borderBottom:"1px solid rgba(43,45,160,0.2)",
+        display:"flex", alignItems:"center",
+        padding:"0 clamp(16px,4%,48px)", gap:"24px",
       }}>
-        {/* Logo */}
-        <div onClick={() => scrollTo("hero")} style={{ display:"flex", alignItems:"center", gap:"10px", cursor:"pointer", marginRight:"auto" }}>
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="#B57F0C" style={{ animation:"glow-gold 3s infinite", flexShrink:0 }}>
-            <path d="M13 2L4.5 13.5H11L10 22L19.5 10.5H13Z"/>
-          </svg>
-          <span style={{ fontFamily:"'Bebas Neue','Arial Black',Impact,sans-serif", fontSize:"22px", letterSpacing:"5px", color:"#fff", lineHeight:1 }}>SELCE</span>
-          <span style={{ fontFamily:"'Share Tech Mono','Courier New',monospace", fontSize:"9px", color:"rgba(155,170,212,0.4)", letterSpacing:"2px", marginTop:"2px" }}>SERVICIOS ELÉCTRICOS</span>
-        </div>
-
-        {/* Desktop nav */}
-        <div style={{ display:"flex", gap:"32px", alignItems:"center" }} className="nav-links">
-          {[["servicios","Servicios"],["nosotros","Nosotros"],["contacto","Contacto"]].map(([id,label]) => (
-            <button key={id} className="nav-lnk" onClick={() => scrollTo(id)}>{label}</button>
+        <button onClick={() => go("inicio")} style={{ background:"none", border:"none", cursor:"pointer", display:"flex", alignItems:"center", gap:"10px", marginRight:"auto" }}>
+          <Bolt/>
+          <span className="bb" style={{ fontSize:"22px", letterSpacing:"5px", color:"#fff" }}>SELCE</span>
+          <span className="mm" style={{ fontSize:"9px", color:"rgba(232,234,246,0.3)", letterSpacing:"1.5px" }}>SERVICIOS</span>
+        </button>
+        <div className="ndl" style={{ alignItems:"center", gap:"28px" }}>
+          {[["servicios","Servicios"],["nosotros","Nosotros"],["contacto","Contacto"]].map(([id,lb]) => (
+            <button key={id} className="na" onClick={() => go(id)}>{lb}</button>
           ))}
-          <button className="btn-gold" onClick={() => scrollTo("contacto")} style={{ padding:"9px 24px", fontSize:"16px" }}>
-            Cotizar →
-          </button>
+          <button className="bp" onClick={() => go("contacto")} style={{ padding:"9px 20px", fontSize:"13px" }}>Cotizar</button>
         </div>
-
-        {/* Mobile toggle */}
-        <button onClick={() => setMenuOpen(!menuOpen)}
-          className="mob-toggle"
-          style={{ display:"none", background:"none", border:"1px solid rgba(43,45,160,0.4)", color:"#D0D8FF", padding:"6px 14px", fontFamily:"'Share Tech Mono','Courier New',monospace", fontSize:"11px", cursor:"pointer", letterSpacing:"1px", alignItems:"center" }}>
-          {menuOpen ? "[✕]" : "[≡]"}
+        <button className="mbt" onClick={() => setMenu(!menu)} style={{
+          background:"none", border:"1px solid rgba(43,45,160,0.4)",
+          color:"#E8EAF6", padding:"7px 14px", fontFamily:"monospace", fontSize:"14px", cursor:"pointer",
+        }}>
+          {menu ? "X" : "="}
         </button>
       </nav>
 
-      {/* Mobile menu */}
-      {menuOpen && (
-        <div style={{ position:"fixed", inset:0, zIndex:199, background:"rgba(5,9,28,0.99)", display:"flex", flexDirection:"column", justifyContent:"center", padding:"clamp(24px,8%,80px)", gap:"2px", animation:"fadein .25s ease" }}>
-          {[["hero","INICIO"],["servicios","SERVICIOS"],["nosotros","NOSOTROS"],["contacto","CONTACTO"]].map(([id,label],i) => (
-            <div key={id} onClick={() => scrollTo(id)} style={{ fontFamily:"'Bebas Neue','Arial Black',Impact,sans-serif", fontSize:"clamp(48px,13vw,72px)", color:"#fff", letterSpacing:"4px", cursor:"pointer", borderBottom:"1px solid rgba(43,45,160,0.2)", paddingBottom:"16px", marginBottom:"16px", display:"flex", justifyContent:"space-between", alignItems:"center" }}>
-              <span>{label}</span>
-              <span style={{ fontSize:"18px", color:"#B57F0C" }}>0{i+1}</span>
-            </div>
+      {/* MOBILE MENU */}
+      {menu && (
+        <div style={{ position:"fixed", inset:0, zIndex:99, background:"rgba(7,11,26,0.98)", display:"flex", flexDirection:"column", justifyContent:"center", padding:"48px 32px" }}>
+          {[["inicio","INICIO"],["servicios","SERVICIOS"],["nosotros","NOSOTROS"],["contacto","CONTACTO"]].map(([id,lb],i) => (
+            <button key={id} onClick={() => go(id)} style={{ background:"none", border:"none", borderBottom:"1px solid rgba(43,45,160,0.15)", padding:"20px 0", display:"flex", justifyContent:"space-between", alignItems:"center", cursor:"pointer" }}>
+              <span className="bb" style={{ fontSize:"clamp(40px,12vw,60px)", color:"#fff", letterSpacing:"3px" }}>{lb}</span>
+              <span className="mm" style={{ fontSize:"13px", color:"#C8900A" }}>{"0"+(i+1)}</span>
+            </button>
           ))}
-          <div style={{ marginTop:"32px" }}>
-            <div className="ann">⚡ EMERGENCIAS: (809) 555-0000</div>
-          </div>
         </div>
       )}
 
-      {/* ═══════════════════════════════ HERO ════════════════════════════════ */}
-      <section id="hero" className="bp-grid" style={{ paddingTop:"54px", minHeight:"100vh", display:"flex", flexDirection:"column", position:"relative" }}>
+      {/* HERO */}
+      <section id="inicio" className="grd hero" style={{ paddingTop:"56px", position:"relative", overflow:"hidden" }}>
 
-        {/* Scanline */}
-        <div style={{ position:"absolute", inset:0, overflow:"hidden", pointerEvents:"none", zIndex:1 }}>
-          <div style={{ position:"absolute", left:0, right:0, height:"1px", background:"linear-gradient(90deg,transparent,rgba(43,45,160,0.25),rgba(181,127,12,0.12),transparent)", animation:"scan 10s linear infinite" }}/>
+        {/* LEFT */}
+        <div style={{ padding:"clamp(40px,6vw,80px) clamp(16px,5%,64px)", display:"flex", flexDirection:"column", justifyContent:"center", position:"relative", zIndex:1 }}>
+          <div className="f1" style={{ marginBottom:"20px" }}>
+            <span className="tag">
+              <span style={{ width:"6px", height:"6px", borderRadius:"50%", background:"#22C55E", display:"inline-block", animation:"blink 2s infinite" }}/>
+              Servicios Electricos · Santiago RD
+            </span>
+          </div>
+          <h1 className="bb f2" style={{ fontSize:"clamp(80px,18vw,160px)", lineHeight:0.85, letterSpacing:"-2px", color:"#fff", marginBottom:"6px" }}>SELCE</h1>
+          <div className="bb f2" style={{ fontSize:"clamp(36px,8vw,72px)", letterSpacing:"clamp(6px,2vw,14px)", color:"rgba(43,45,160,0.5)", lineHeight:1, marginBottom:"28px" }}>SERVICIOS</div>
+          <div className="f3" style={{ display:"flex", alignItems:"center", gap:"14px", marginBottom:"18px" }}>
+            <div style={{ width:"40px", height:"2px", background:"#C8900A" }}/>
+            <span className="mm" style={{ fontSize:"11px", letterSpacing:"1.5px", color:"rgba(232,234,246,0.4)" }}>120/240V · 60Hz · Est. 2012</span>
+          </div>
+          <p className="f3" style={{ fontSize:"clamp(14px,1.6vw,16px)", color:"rgba(232,234,246,0.65)", lineHeight:1.85, maxWidth:"480px", marginBottom:"36px" }}>
+            Mas de 12 anos resolviendo proyectos electricos en Santiago. Instalaciones, mantenimiento, energia solar y emergencias 24/7. Todo trabajo entregado con garantia escrita.
+          </p>
+          <div className="hbtns f4">
+            <button className="bp" onClick={() => go("contacto")}>Cotizacion Gratis</button>
+            <button className="bs" onClick={() => go("servicios")}>Ver Servicios</button>
+          </div>
+          <div className="f5" style={{ paddingTop:"24px", borderTop:"1px solid rgba(43,45,160,0.15)", display:"flex", gap:"clamp(20px,4vw,40px)", flexWrap:"wrap" }}>
+            {[["500+","Proyectos"],["12","Anos"],["24/7","Disponible"]].map(([v,l]) => (
+              <div key={l}>
+                <div className="bb" style={{ fontSize:"clamp(28px,4vw,38px)", color:"#C8900A", lineHeight:1 }}>{v}</div>
+                <div className="mm" style={{ fontSize:"10px", color:"rgba(232,234,246,0.3)", letterSpacing:"1px", marginTop:"2px" }}>{l}</div>
+              </div>
+            ))}
+          </div>
         </div>
 
-        {/* Status bar */}
-        <div style={{ padding:"9px clamp(18px,4%,48px)", borderBottom:"1px solid rgba(43,45,160,0.18)", display:"flex", alignItems:"center", gap:"16px", position:"relative", zIndex:2, flexWrap:"wrap", rowGap:"6px" }}>
-          <span style={{ width:"6px", height:"6px", borderRadius:"50%", background:"#22C55E", boxShadow:"0 0 8px #22C55E", display:"inline-block", animation:"blink 2s infinite", flexShrink:0 }}/>
-          <span className="ann">SIS: EN LÍNEA · SELCE-SERVICIOS-RD · REV.2025</span>
-          <span className="ann" style={{ marginLeft:"auto", color:"rgba(181,127,12,0.75)" }}>⚡ EMERGENCIAS: (809) 555-0000</span>
-        </div>
-
-        {/* Hero body */}
-        <div style={{ flex:1, display:"flex", position:"relative", zIndex:2 }} className="hero-cols">
-
-          {/* Left — Content */}
-          <div className="hero-inner" style={{ flex:1, padding:"clamp(28px,5%,64px) clamp(18px,4%,48px)", display:"flex", flexDirection:"column", justifyContent:"space-between", gap:"clamp(24px,4vh,40px)", minHeight:"85vh" }}>
-
-            {/* Top annotations */}
-            <div className="hero-plano" style={{ display:"flex", alignItems:"center", gap:"10px" }}>
-              <div style={{ width:"20px", height:"1px", background:"rgba(181,127,12,0.4)" }}/>
-              <span className="ann">PLANO: HQ-001 · SANTIAGO, RD</span>
-            </div>
-
-            {/* Title block */}
-            <div style={{ margin:"0" }}>
-              <div className="power-on d1" style={{ marginBottom:"20px" }}>
-                <span className="tag">SERVICIOS ELÉCTRICOS PROFESIONALES</span>
+        {/* RIGHT — circuit */}
+        <div className="hero-r" style={{ borderLeft:"1px solid rgba(43,45,160,0.15)", position:"relative", overflow:"hidden" }}>
+          <div style={{ position:"absolute", inset:0, background:"linear-gradient(160deg,rgba(43,45,160,0.05) 0%,transparent 60%)", zIndex:0 }}/>
+          <div className="mm" style={{ position:"absolute", top:"20px", left:"20px", zIndex:2, fontSize:"10px", color:"rgba(232,234,246,0.22)", letterSpacing:"1.5px" }}>SELCE-001 / REV.C-2025</div>
+          <div style={{ position:"absolute", top:"52px", left:"24px", zIndex:2, display:"flex", flexDirection:"column", gap:"18px" }}>
+            {[["500+","PROYECTOS"],["12","ANOS"],["24/7","DISPONIBLE"]].map(([v,l]) => (
+              <div key={l}>
+                <div className="bb" style={{ fontSize:"clamp(38px,5vw,52px)", color:"rgba(255,255,255,0.1)", lineHeight:1 }}>{v}</div>
+                <div className="mm" style={{ fontSize:"9px", color:"rgba(232,234,246,0.12)", letterSpacing:"1.5px" }}>{l}</div>
               </div>
-
-              <h1 className="power-on d2 hero-title" style={{
-                fontFamily:"'Bebas Neue','Arial Black',Impact,sans-serif",
-                fontSize:"clamp(80px,16vw,200px)",
-                color:"#fff", lineHeight:0.82, letterSpacing:"-3px",
-              }}>SELCE</h1>
-
-              <h2 className="power-on d3 hero-sub" style={{
-                fontFamily:"'Bebas Neue','Arial Black',Impact,sans-serif",
-                fontSize:"clamp(36px,8vw,100px)",
-                color:"rgba(155,170,212,0.32)", letterSpacing:"clamp(4px,1.5vw,12px)",
-                marginBottom:"clamp(12px,2vh,24px)", lineHeight:1
-              }}>SERVICIOS</h2>
-
-              {/* Divider */}
-              <div className="power-on d3" style={{ display:"flex", alignItems:"center", gap:"14px", margin:"clamp(10px,1.8vh,22px) 0" }}>
-                <div style={{ flex:1, height:"1px", background:"linear-gradient(90deg,#B57F0C,rgba(43,45,160,0.3))" }}/>
-                <span className="ann">120/240V · 60Hz · SANTIAGO, RD</span>
-              </div>
-
-              <p className="power-on d4" style={{ fontSize:"clamp(13px,1.4vw,15px)", color:"var(--text)", lineHeight:1.8, maxWidth:"540px", letterSpacing:".3px", marginBottom:"clamp(20px,3vh,32px)" }}>
-                Empresa de servicios eléctricos con más de 12 años en Santiago. Instalaciones residenciales y comerciales, mantenimiento preventivo, energía solar y emergencias 24/7. Todo trabajo garantizado por escrito.
-              </p>
-            </div>
-
-            {/* CTAs */}
-            <div className="power-on d5">
-              <div style={{ display:"flex", gap:"12px", flexWrap:"wrap", alignItems:"stretch", marginBottom:"clamp(10px,1.5vh,16px)" }} className="cta-row">
-                <button className="btn-gold" onClick={() => scrollTo("contacto")}>⚡ COTIZACIÓN GRATIS</button>
-                <button className="btn-outline" onClick={() => scrollTo("servicios")}>VER SERVICIOS</button>
-              </div>
-              <span className="ann">RESPUESTA &lt; 60 MIN EN SANTIAGO</span>
-            </div>
+            ))}
           </div>
-
-          {/* Right — Schematic panel (desktop only) */}
-          <div className="schematic-panel" style={{
-            width:"clamp(320px,35vw,460px)", flexShrink:0,
-            borderLeft:"1px solid rgba(43,45,160,0.2)",
-            padding:"clamp(24px,3%,40px)",
-            display:"flex", flexDirection:"column", position:"relative"
-          }}>
-            <div style={{ position:"absolute", top:"16px", left:"16px" }}>
-              <span className="ann">ESQUEMÁTICO — SELCE-001</span>
+          <div style={{ position:"absolute", bottom:"32px", left:"24px", zIndex:2, display:"flex", alignItems:"center", gap:"12px" }}>
+            <div style={{ width:"52px", height:"52px", borderRadius:"50%", border:"1.5px solid rgba(200,144,10,0.2)", display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center" }}>
+              <Bolt/>
+              <span className="mm" style={{ fontSize:"6px", color:"rgba(200,144,10,0.35)", marginTop:"3px", textAlign:"center", lineHeight:1.4 }}>CERT<br/>2012</span>
             </div>
-
-            {/* Stats inside panel */}
-            <div style={{ marginTop:"48px", marginBottom:"24px", display:"flex", flexDirection:"column", gap:"28px" }}>
-              {[["500+","PROYECTOS"],["12","AÑOS DE EXP."],["24/7","DISPONIBILIDAD"]].map(([n,l]) => (
-                <div key={l}>
-                  <div style={{ fontFamily:"'Bebas Neue','Arial Black',Impact,sans-serif", fontSize:"clamp(48px,6vw,68px)", color:"#fff", lineHeight:1, letterSpacing:"-2px", animation:"glow-gold 4s ease-in-out infinite" }}>{n}</div>
-                  <div className="ann">{l}</div>
-                </div>
-              ))}
-            </div>
-
-            {/* SVG schematic */}
-            <div style={{ flex:1, position:"relative" }}>
-              <Schematic/>
-            </div>
-
-            {/* Stamp */}
-            <div style={{ position:"absolute", bottom:"56px", right:"24px", width:"88px", height:"88px", borderRadius:"50%", border:"2px solid rgba(181,127,12,0.35)", display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", animation:"float-y 4s ease-in-out infinite" }}>
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="#B57F0C"><path d="M13 2L4.5 13.5H11L10 22L19.5 10.5H13Z"/></svg>
-              <span style={{ fontSize:"7px", letterSpacing:"1.5px", color:"rgba(181,127,12,0.65)", marginTop:"5px", textAlign:"center", lineHeight:1.5, fontFamily:"'Share Tech Mono','Courier New',monospace" }}>CERTIF.<br/>2012</span>
-            </div>
+            <div className="mm" style={{ fontSize:"9px", color:"rgba(232,234,246,0.18)", lineHeight:1.6 }}>INSTALADOR CERT.<br/>NORMA NEC DOM</div>
           </div>
+          <Circuit/>
         </div>
       </section>
 
-      {/* ═══════════════════════════════ MARQUEE ═════════════════════════════ */}
-      <div style={{ background:"#B57F0C", overflow:"hidden", padding:"13px 0", borderTop:"1px solid rgba(10,10,10,0.15)", borderBottom:"1px solid rgba(10,10,10,0.15)", position:"relative", zIndex:2 }}>
-        <div style={{ display:"flex", animation:"marquee 28s linear infinite", width:"max-content" }}>
+      {/* MARQUEE */}
+      <div style={{ background:"#C8900A", overflow:"hidden", padding:"11px 0" }}>
+        <div style={{ display:"flex", animation:"mq 25s linear infinite", width:"max-content" }}>
           {[0,1].map(k => (
-            <span key={k} style={{ fontFamily:"'Bebas Neue','Arial Black',Impact,sans-serif", fontWeight:700, fontSize:"15px", letterSpacing:"4px", color:"#fff", whiteSpace:"nowrap", paddingRight:"0" }}>
-              {"⚡ INSTALACIONES  ·  MANTENIMIENTO  ·  ENERGÍA SOLAR  ·  SMART HOME  ·  EMERGENCIAS 24/7  ·  SANTIAGO RD  ·  ".repeat(4)}
+            <span key={k} className="mm" style={{ fontSize:"11px", letterSpacing:"3px", color:"#fff", whiteSpace:"nowrap", paddingRight:"40px" }}>
+              INSTALACIONES ELECTRICAS  x  MANTENIMIENTO  x  ENERGIA SOLAR  x  HOGAR INTELIGENTE  x  EMERGENCIAS 24/7  x  SANTIAGO RD  x  INSTALACIONES ELECTRICAS  x  MANTENIMIENTO  x  ENERGIA SOLAR  x  HOGAR INTELIGENTE  x  EMERGENCIAS 24/7  x  SANTIAGO RD  x
             </span>
           ))}
         </div>
       </div>
 
-      {/* ═══════════════════════════════ SERVICES ════════════════════════════ */}
-      <section id="servicios" className="bp-grid" style={{ padding:"clamp(48px,7vw,88px) clamp(18px,4%,48px)" }}>
+      {/* STATS */}
+      <div style={{ borderBottom:"1px solid rgba(43,45,160,0.2)" }}>
+        <div className="stats" style={{ maxWidth:"1200px", margin:"0 auto" }}>
+          {[{l:"Proyectos completados",n:500,s:"+"},{l:"Anos en operacion",n:12,s:""},{l:"Satisfaccion cliente",n:98,s:"%"},{l:"Horas disponible",n:24,s:"/7"}].map(d => (
+            <div key={d.l} className="st">
+              <div className="mm" style={{ fontSize:"10px", color:"rgba(232,234,246,0.3)", letterSpacing:"1px", marginBottom:"10px", textTransform:"uppercase" }}>{d.l}</div>
+              <div className="bb" style={{ fontSize:"clamp(44px,6vw,64px)", color:"#C8900A", lineHeight:1 }}>
+                <Counter to={d.n} suffix={d.s}/>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* SERVICIOS */}
+      <section id="servicios" style={{ padding:"clamp(56px,8vw,96px) clamp(16px,4%,48px)", borderBottom:"1px solid rgba(43,45,160,0.2)" }}>
         <div style={{ maxWidth:"1200px", margin:"0 auto" }}>
-
-          <div style={{ display:"flex", alignItems:"baseline", justifyContent:"space-between", marginBottom:"clamp(24px,4vw,40px)", paddingBottom:"16px", borderBottom:"1px solid rgba(43,45,160,0.3)", flexWrap:"wrap", gap:"12px" }}>
-            <h2 style={{ fontFamily:"'Bebas Neue','Arial Black',Impact,sans-serif", fontSize:"clamp(36px,6vw,72px)", letterSpacing:"6px", color:"#fff" }}>SERVICIOS</h2>
-            <span className="ann">06 ESPECIALIDADES · FUND. 2012</span>
+          <div style={{ display:"flex", alignItems:"flex-end", justifyContent:"space-between", marginBottom:"clamp(32px,5vw,56px)", flexWrap:"wrap", gap:"16px" }}>
+            <div>
+              <span className="tag" style={{ marginBottom:"14px", display:"block" }}>Nuestros servicios</span>
+              <h2 className="bb" style={{ fontSize:"clamp(40px,7vw,72px)", color:"#fff", letterSpacing:"2px", lineHeight:0.9 }}>06 ESPECIALIDADES</h2>
+            </div>
+            <p style={{ fontSize:"14px", color:"rgba(232,234,246,0.45)", maxWidth:"260px", lineHeight:1.7 }}>Fundados en 2012. Mas de 500 proyectos en Santiago y el Cibao.</p>
           </div>
-
-          {/* Table header — desktop only */}
-          <div className="nav-links" style={{ display:"grid", gridTemplateColumns:"100px 1fr 90px 100px 28px", gap:"20px", padding:"8px 28px", marginBottom:"6px" }}>
-            {["CÓDIGO","SERVICIO","CORRIENTE","TENSIÓN",""].map(h => <span key={h} className="ann">{h}</span>)}
-          </div>
-
-          <div style={{ display:"flex", flexDirection:"column", gap:"5px" }}>
-            {services.map((s,i) => (
-              <div key={i}>
-                <div
-                  className={`svc-row ${activeIdx===i?"open":""}`}
-                  onClick={() => setActiveIdx(activeIdx===i ? null : i)}
-                  style={{ gridTemplateColumns:"100px 1fr 90px 100px 28px" }}
-                >
-                  <span className="ann svc-code" style={{ color:"#B57F0C", letterSpacing:"1px" }}>{s.code}</span>
-                  <div>
-                    <div style={{ fontFamily:"'Bebas Neue','Arial Black',Impact,sans-serif", fontSize:"clamp(22px,3vw,30px)", letterSpacing:"2px", color: activeIdx===i ? "#B57F0C" : "#fff", lineHeight:1 }}>{s.name}</div>
-                    <div className="ann" style={{ marginTop:"3px" }}>{s.sub}</div>
+          <div className="svcs">
+            {SVCS.map((s,i) => (
+              <div key={i} className={"card"+(open===i?" on":"")} onClick={() => setOpen(open===i?null:i)}>
+                <div style={{ display:"flex", alignItems:"flex-start", justifyContent:"space-between", gap:"14px" }}>
+                  <div style={{ display:"flex", gap:"14px", alignItems:"flex-start" }}>
+                    <div style={{ width:"36px", height:"36px", background:open===i?"rgba(200,144,10,0.15)":"rgba(43,45,160,0.12)", display:"flex", alignItems:"center", justifyContent:"center", flexShrink:0, transition:"background .2s" }}>
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill={open===i?"#C8900A":"rgba(232,234,246,0.4)"}><path d={s.i}/></svg>
+                    </div>
+                    <div>
+                      <div className="mm" style={{ fontSize:"10px", color:"rgba(200,144,10,0.6)", letterSpacing:"1px", marginBottom:"4px" }}>{s.n}</div>
+                      <h3 className="bb" style={{ fontSize:"clamp(20px,2.5vw,26px)", color:open===i?"#C8900A":"#fff", letterSpacing:"1px", lineHeight:1 }}>{s.t}</h3>
+                    </div>
                   </div>
-                  <span className="ann svc-meta">{s.amps}</span>
-                  <span className="ann svc-meta">{s.volt}</span>
-                  <span style={{ fontFamily:"'Share Tech Mono',monospace", fontSize:"20px", color:"#B57F0C", transition:"transform .3s", display:"block", transform: activeIdx===i ? "rotate(45deg)" : "none", lineHeight:1 }}>+</span>
+                  <span style={{ color:"rgba(200,144,10,0.7)", fontSize:"22px", lineHeight:1, flexShrink:0, display:"inline-block", transform:open===i?"rotate(45deg)":"none", transition:"transform .25s" }}>+</span>
                 </div>
-
-                {activeIdx===i && (
-                  <div style={{ background:"rgba(43,45,160,0.07)", borderLeft:"2px solid #B57F0C", padding:"clamp(16px,2.5vw,24px) clamp(18px,3vw,28px)", marginTop:"5px", animation:"fadein .25s ease" }}>
-                    <p style={{ fontSize:"clamp(12px,1.3vw,14px)", color:"var(--text)", lineHeight:1.9, maxWidth:"640px", marginBottom:"20px" }}>{s.desc}</p>
-                    <button className="btn-gold" style={{ fontSize:"16px", padding:"10px 24px" }} onClick={() => scrollTo("contacto")}>
-                      SOLICITAR SERVICIO →
-                    </button>
+                {open===i && (
+                  <div style={{ marginTop:"18px", paddingTop:"18px", borderTop:"1px solid rgba(43,45,160,0.2)", animation:"up .25s both" }}>
+                    <p style={{ fontSize:"14px", color:"rgba(232,234,246,0.65)", lineHeight:1.85, marginBottom:"16px" }}>{s.d}</p>
+                    <button className="bp" onClick={() => go("contacto")} style={{ fontSize:"13px", padding:"10px 20px" }}>Solicitar servicio</button>
                   </div>
                 )}
               </div>
@@ -573,182 +363,162 @@ export default function SelceFinal() {
         </div>
       </section>
 
-      {/* ═══════════════════════════════ STATS ═══════════════════════════════ */}
-      <section style={{ borderTop:"1px solid rgba(43,45,160,0.2)", borderBottom:"1px solid rgba(43,45,160,0.2)", background:"rgba(43,45,160,0.05)" }}>
-        <div style={{ maxWidth:"1200px", margin:"0 auto", display:"grid", gridTemplateColumns:"repeat(4,1fr)", borderLeft:"1px solid rgba(43,45,160,0.2)" }} className="stats-row">
-          {[
-            { label:"PROYECTOS COMPLETADOS", end:500, suffix:"+" },
-            { label:"AÑOS EN OPERACIÓN",     end:12,  suffix:"" },
-            { label:"SATISFACCIÓN CLIENTE",  end:98,  suffix:"%" },
-            { label:"HORAS DISPONIBLE",      end:24,  suffix:"/7" },
-          ].map((s,i) => (
-            <div key={i} className="stat-box">
-              <div className="ann" style={{ marginBottom:"12px" }}>{s.label}</div>
-              <div style={{ fontFamily:"'Bebas Neue','Arial Black',Impact,sans-serif", fontSize:"clamp(44px,6vw,72px)", color:"#B57F0C", lineHeight:1, letterSpacing:"-1px", animation:"glow-gold 4s ease-in-out infinite" }}>
-                <Counter end={s.end} suffix={s.suffix}/>
+      {/* NOSOTROS */}
+      <section id="nosotros" className="grd" style={{ padding:"clamp(40px,6vw,72px) clamp(16px,4%,48px)", borderBottom:"1px solid rgba(43,45,160,0.2)" }}>
+        <div style={{ maxWidth:"1200px", margin:"0 auto" }}>
+
+          {/* Header row */}
+          <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", flexWrap:"wrap", gap:"16px", marginBottom:"40px", paddingBottom:"28px", borderBottom:"1px solid rgba(43,45,160,0.15)" }}>
+            <div style={{ display:"flex", alignItems:"center", gap:"24px" }}>
+              <span className="tag">Quienes somos</span>
+              <div style={{ display:"flex", alignItems:"baseline", gap:"8px" }}>
+                <span className="bb" style={{ fontSize:"clamp(48px,7vw,80px)", color:"#C8900A", lineHeight:1 }}>12</span>
+                <span className="mm" style={{ fontSize:"11px", color:"rgba(232,234,246,0.3)", letterSpacing:"1.5px" }}>ANOS EN EL MERCADO</span>
               </div>
-              <div style={{ position:"absolute", top:"12px", right:"12px", width:"6px", height:"6px", borderTop:"1px solid rgba(181,127,12,0.3)", borderRight:"1px solid rgba(181,127,12,0.3)" }}/>
             </div>
-          ))}
-        </div>
-      </section>
-
-      {/* ═══════════════════════════════ STATEMENT ═══════════════════════════ */}
-      <section style={{ background:"#2B2DA0", padding:"clamp(48px,7vw,88px) clamp(18px,4%,48px)", position:"relative", overflow:"hidden" }}>
-        <div style={{ position:"absolute", right:"-40px", bottom:"-60px", fontFamily:"'Bebas Neue',sans-serif", fontWeight:900, fontSize:"clamp(120px,22vw,280px)", color:"rgba(255,255,255,0.04)", letterSpacing:"-8px", lineHeight:1, userSelect:"none", pointerEvents:"none" }}>RD</div>
-        <div style={{ maxWidth:"1000px", margin:"0 auto", display:"flex", gap:"32px", alignItems:"flex-start" }}>
-          <svg width="2" height="clamp(60px,8vw,90px)" viewBox="0 2 2 90" style={{ flexShrink:0, marginTop:"8px" }}>
-            <line x1="1" y1="0" x2="1" y2="90" stroke="#B57F0C" strokeWidth="2"/>
-          </svg>
-          <div>
-            <p style={{ fontFamily:"'Bebas Neue','Arial Black',Impact,sans-serif", fontWeight:800, fontSize:"clamp(24px,4vw,54px)", color:"#fff", lineHeight:1.1, letterSpacing:"-0.5px" }}>
-              "En Santiago hay muchas empresas eléctricas. Nosotros somos los que responden cuando las demás no pueden."
-            </p>
-            <div className="ann" style={{ marginTop:"28px", color:"rgba(255,255,255,0.4)" }}>
-              SELCE SERVICIOS · +12 AÑOS · 500+ PROYECTOS COMPLETADOS
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ═══════════════════════════════ ABOUT ═══════════════════════════════ */}
-      <section id="nosotros" className="bp-grid" style={{ padding:"clamp(48px,7vw,88px) clamp(18px,4%,48px)", borderTop:"1px solid rgba(43,45,160,0.2)" }}>
-        <div style={{ maxWidth:"1200px", margin:"0 auto", display:"flex", gap:"clamp(32px,6vw,80px)", alignItems:"flex-start", flexWrap:"wrap" }} className="about-cols">
-
-          {/* Big number */}
-          <div style={{ flexShrink:0 }}>
-            <div className="about-big-num" style={{ fontFamily:"'Bebas Neue','Arial Black',Impact,sans-serif", fontSize:"clamp(96px,18vw,220px)", color:"#2B2DA0", lineHeight:0.85, letterSpacing:"-6px" }}>12</div>
-            <div className="ann" style={{ marginTop:"14px" }}>AÑOS EN EL MERCADO</div>
-            <div style={{ width:"48px", height:"3px", background:"#B57F0C", marginTop:"12px" }}/>
-          </div>
-
-          {/* Text block */}
-          <div style={{ flex:1, minWidth:"260px", paddingTop:"16px" }}>
-            <div className="ann" style={{ color:"#B57F0C", marginBottom:"20px" }}>// SOBRE SELCE SERVICIOS</div>
-
-            <h2 style={{ fontFamily:"'Bebas Neue','Arial Black',Impact,sans-serif", fontSize:"clamp(28px,4vw,52px)", color:"#fff", letterSpacing:"-0.5px", lineHeight:0.9, marginBottom:"24px" }}>
-              EXPERTOS ELÉCTRICOS<br/>EN SANTIAGO DESDE<br/>HACE MÁS DE UNA DÉCADA
+            <h2 className="bb" style={{ fontSize:"clamp(22px,3vw,36px)", color:"#fff", letterSpacing:"1px", lineHeight:1, textAlign:"right" }}>
+              EXPERTOS ELECTRICOS<br/>
+              <span style={{ color:"rgba(43,45,160,0.6)" }}>SANTIAGO · DESDE 2012</span>
             </h2>
+          </div>
 
-            <p style={{ fontSize:"clamp(12px,1.3vw,14px)", color:"var(--text)", lineHeight:1.9, marginBottom:"18px" }}>
-              Fundada en Santiago en 2012, Selce Servicios nació para resolver los problemas eléctricos que otras empresas no querían atender. Hoy somos una empresa reconocida en todo el Cibao por nuestra puntualidad, transparencia en precios y calidad garantizada por escrito.
-            </p>
-            <p style={{ fontSize:"clamp(12px,1.3vw,14px)", color:"var(--text)", lineHeight:1.9, marginBottom:"clamp(24px,3vw,36px)" }}>
-              No prometemos lo que no podemos cumplir. Cada trabajo se entrega con garantía escrita, plano técnico actualizado y soporte post-instalación.
-            </p>
+          {/* Content grid */}
+          <div className="abt" style={{ gap:"48px" }}>
 
-            {/* Feature grid */}
-            <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:"1px", border:"1px solid rgba(43,45,160,0.25)", background:"rgba(43,45,160,0.25)" }} className="feat-grid">
-              {[["Certificados NEC","Código Eléctrico Nacional"],["Garantía escrita","En cada trabajo"],["Técnicos propios","Sin subcontratos"],["Presupuesto 0$","Sin costo ni compromiso"]].map(([title,sub],i) => (
-                <div key={i} style={{ padding:"clamp(14px,2vw,22px)", background:"#05091C", transition:"background .2s" }}
-                  onMouseEnter={e => e.currentTarget.style.background="rgba(43,45,160,0.08)"}
-                  onMouseLeave={e => e.currentTarget.style.background="#05091C"}>
-                  <div style={{ fontFamily:"'Bebas Neue','Arial Black',Impact,sans-serif", fontSize:"clamp(16px,2vw,20px)", letterSpacing:"1px", color:"#fff", marginBottom:"4px" }}>{title}</div>
-                  <div className="ann">{sub}</div>
+            {/* Left — texto + quote */}
+            <div>
+              <p style={{ fontSize:"clamp(14px,1.5vw,15px)", color:"rgba(232,234,246,0.65)", lineHeight:1.85, marginBottom:"18px" }}>
+                Fundada en Santiago en 2012, Selce Servicios nacio para resolver los proyectos electricos que otras empresas no querian atender. Hoy somos referencia en todo el Cibao, reconocidos por puntualidad, precios transparentes y calidad garantizada.
+              </p>
+              <p style={{ fontSize:"clamp(14px,1.5vw,15px)", color:"rgba(232,234,246,0.65)", lineHeight:1.85, marginBottom:"28px" }}>
+                No prometemos lo que no podemos cumplir. Cada proyecto se entrega con garantia escrita, plano tecnico actualizado y soporte post-instalacion incluido.
+              </p>
+              <blockquote style={{ borderLeft:"2px solid #C8900A", paddingLeft:"18px", marginBottom:"28px" }}>
+                <p style={{ fontSize:"clamp(14px,1.5vw,16px)", color:"#E8EAF6", lineHeight:1.75, fontStyle:"italic" }}>
+                  "En Santiago hay muchas empresas electricas. Nosotros somos los que responden cuando las demas no pueden."
+                </p>
+                <div className="mm" style={{ fontSize:"10px", color:"rgba(232,234,246,0.3)", letterSpacing:"1px", marginTop:"10px" }}>SELCE SERVICIOS · DESDE 2012</div>
+              </blockquote>
+              <button className="bp" onClick={() => go("contacto")} style={{ fontSize:"13px", padding:"11px 22px" }}>
+                Contactar ahora
+              </button>
+            </div>
+
+            {/* Right — 4 puntos + stats */}
+            <div style={{ display:"flex", flexDirection:"column", gap:"12px" }}>
+              {[
+                ["Certificados NEC","Trabajo bajo norma electrica dominicana e internacional."],
+                ["Garantia escrita","Cada proyecto entregado con garantia firmada."],
+                ["Tecnicos propios","Sin subcontratos. Tu proyecto, nuestros tecnicos."],
+                ["Presupuesto gratis","Cotizamos sin costo ni compromiso."],
+              ].map(([t,d]) => (
+                <div key={t} style={{ display:"flex", gap:"16px", padding:"16px", border:"1px solid rgba(43,45,160,0.18)", transition:"border-color .2s, background .2s" }}
+                  onMouseEnter={e => e.currentTarget.style.borderColor="rgba(200,144,10,0.3)"}
+                  onMouseLeave={e => e.currentTarget.style.borderColor="rgba(43,45,160,0.18)"}>
+                  <div style={{ width:"6px", height:"6px", borderRadius:"50%", background:"#C8900A", flexShrink:0, marginTop:"6px" }}/>
+                  <div>
+                    <div style={{ fontSize:"14px", fontWeight:"500", color:"#fff", marginBottom:"3px" }}>{t}</div>
+                    <div style={{ fontSize:"13px", color:"rgba(232,234,246,0.45)", lineHeight:1.5 }}>{d}</div>
+                  </div>
                 </div>
               ))}
+
+              {/* Mini stats row */}
+              <div style={{ display:"grid", gridTemplateColumns:"repeat(3,1fr)", gap:"1px", background:"rgba(43,45,160,0.2)", marginTop:"4px", border:"1px solid rgba(43,45,160,0.2)" }}>
+                {[["500+","Proyectos"],["12","Anos"],["98%","Satisfaccion"]].map(([v,l]) => (
+                  <div key={l} style={{ background:"#070B1A", padding:"14px 12px", textAlign:"center" }}>
+                    <div className="bb" style={{ fontSize:"28px", color:"#C8900A", lineHeight:1 }}>{v}</div>
+                    <div className="mm" style={{ fontSize:"9px", color:"rgba(232,234,246,0.3)", letterSpacing:"1px", marginTop:"2px" }}>{l}</div>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* ═══════════════════════════════ EMERGENCY CTA ═══════════════════════ */}
-      <div style={{ background:"rgba(181,127,12,0.08)", borderTop:"1px solid rgba(181,127,12,0.2)", borderBottom:"1px solid rgba(181,127,12,0.2)", padding:"clamp(32px,5vw,56px) clamp(18px,4%,48px)" }}>
-        <div style={{ maxWidth:"1200px", margin:"0 auto", display:"flex", alignItems:"center", justifyContent:"space-between", gap:"28px", flexWrap:"wrap" }} className="emerg-row">
+      {/* EMERGENCIAS */}
+      <div style={{ background:"#2B2DA0", padding:"clamp(36px,5vw,56px) clamp(16px,4%,48px)", borderBottom:"1px solid rgba(0,0,0,0.2)" }}>
+        <div style={{ maxWidth:"1200px", margin:"0 auto" }} className="emg">
           <div>
-            <div style={{ display:"flex", alignItems:"center", gap:"10px", marginBottom:"8px" }}>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="#B57F0C"><path d="M13 2L4.5 13.5H11L10 22L19.5 10.5H13Z"/></svg>
-              <span className="ann" style={{ color:"#B57F0C" }}>EMERGENCIAS ELÉCTRICAS</span>
+            <div className="mm" style={{ fontSize:"10px", color:"rgba(255,255,255,0.5)", letterSpacing:"2px", marginBottom:"10px", display:"flex", alignItems:"center", gap:"8px" }}>
+              <Bolt/> EMERGENCIAS ELECTRICAS
             </div>
-            <h3 style={{ fontFamily:"'Bebas Neue','Arial Black',Impact,sans-serif", fontSize:"clamp(26px,4vw,52px)", color:"#fff", letterSpacing:"-0.5px", lineHeight:0.95 }}>
-              ¿APAGÓN O CORTO CIRCUITO?<br/>RESPONDEMOS EN 60 MINUTOS.
+            <h3 className="bb" style={{ fontSize:"clamp(26px,4vw,48px)", color:"#fff", lineHeight:0.95 }}>
+              APAGON O CORTO CIRCUITO?<br/>RESPONDEMOS EN 60 MINUTOS.
             </h3>
           </div>
-          <div style={{ display:"flex", gap:"12px", flexWrap:"wrap", width:"100%", maxWidth:"360px" }} className="emerg-btns">
-            <a href="tel:+18095550000" style={{ textDecoration:"none", flex:1 }}>
-              <button className="btn-gold" style={{ background:"#fff", color:"#0A0A0A", fontSize:"17px", width:"100%" }}>📞 LLAMAR</button>
+          <div className="emgb">
+            <a href="tel:+18095550000">
+              <button className="bp" style={{ background:"#fff", color:"#0A0A0A" }}>
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="#0A0A0A"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1-9.4 0-17-7.6-17-17 0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z"/></svg>
+                Llamar Ahora
+              </button>
             </a>
-            <a href="https://wa.me/18095550000" style={{ textDecoration:"none", flex:1 }}>
-              <button className="btn-gold" style={{ background:"#25D366", fontSize:"17px", width:"100%" }}>💬 WHATSAPP</button>
+            <a href="https://wa.me/18095550000">
+              <button className="bp" style={{ background:"#25D366" }}>
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="#fff"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                WhatsApp
+              </button>
             </a>
           </div>
         </div>
       </div>
 
-      {/* ═══════════════════════════════ CONTACT ═════════════════════════════ */}
-      <section id="contacto" style={{ borderTop:"1px solid rgba(43,45,160,0.2)", background:"rgba(3,5,16,0.8)" }}>
-        <div style={{ maxWidth:"1200px", margin:"0 auto", display:"flex", flexWrap:"wrap" }} className="contact-cols">
-
-          {/* Left info */}
-          <div className="contact-border" style={{ flex:"0 0 clamp(260px,35%,400px)", padding:"clamp(36px,6vw,72px) clamp(18px,4%,40px)", borderRight:"1px solid rgba(43,45,160,0.18)" }}>
-            <span className="tag" style={{ marginBottom:"24px", display:"inline-block" }}>TERMINAL DE CONTACTO</span>
-            <h2 style={{ fontFamily:"'Bebas Neue','Arial Black',Impact,sans-serif", fontSize:"clamp(44px,7vw,80px)", color:"#fff", letterSpacing:"2px", lineHeight:0.85, marginBottom:"40px" }}>
-              INICIA<br/>EL<br/><span style={{ color:"#B57F0C" }}>CIRCUITO.</span>
+      {/* CONTACTO */}
+      <section id="contacto" style={{ borderBottom:"1px solid rgba(43,45,160,0.2)", paddingBottom:"clamp(32px,5vw,56px)" }}>
+        <div style={{ maxWidth:"1200px", margin:"0 auto", alignItems:"start" }} className="ctt">
+          <div className="ci" style={{ padding:"clamp(32px,5vw,56px) clamp(16px,4%,40px) 0", position:"sticky", top:"56px" }}>
+            <span className="tag" style={{ marginBottom:"20px", display:"inline-block" }}>Contactanos</span>
+            <h2 className="bb" style={{ fontSize:"clamp(36px,5.5vw,60px)", color:"#fff", lineHeight:0.85, letterSpacing:"1px", marginBottom:"24px" }}>
+              INICIA<br/>EL<br/><span style={{ color:"#C8900A" }}>CIRCUITO.</span>
             </h2>
-
-            <div style={{ width:"100%", height:"1px", background:"rgba(43,45,160,0.2)", marginBottom:"36px" }}/>
-
-            {[["UBICACIÓN://","Santiago de los Caballeros\nRepública Dominicana"],["TEL://","(809) 555-0000\nEmergencias 24 horas"],["CORREO://","info@selceservicios.com"],["HORARIO://","Lun–Vie 8am–6pm\nSáb 8am–2pm · 24h emergencias"]].map(([k,v]) => (
-              <div key={k} style={{ marginBottom:"28px" }}>
-                <div className="ann" style={{ color:"#B57F0C", marginBottom:"5px" }}>{k}</div>
-                <div style={{ fontSize:"clamp(13px,1.5vw,15px)", color:"#D0D8FF", lineHeight:1.65, whiteSpace:"pre-line" }}>{v}</div>
-              </div>
-            ))}
-
-            <div style={{ marginTop:"32px", paddingTop:"28px", borderTop:"1px solid rgba(43,45,160,0.18)" }}>
-              <div className="ann" style={{ marginBottom:"14px" }}>SÍGUENOS EN</div>
-              <div style={{ display:"flex", gap:"10px", flexWrap:"wrap" }}>
-                {["Facebook","Instagram","WhatsApp"].map(s => (
-                  <button key={s} style={{ background:"none", border:"1px solid rgba(43,45,160,0.35)", color:"rgba(155,170,212,0.55)", padding:"8px 16px", fontFamily:"'Share Tech Mono','Courier New',monospace", fontSize:"11px", letterSpacing:"1px", cursor:"pointer", transition:"all .2s" }}
-                    onMouseEnter={e => { e.currentTarget.style.borderColor="#B57F0C"; e.currentTarget.style.color="#B57F0C"; }}
-                    onMouseLeave={e => { e.currentTarget.style.borderColor="rgba(43,45,160,0.35)"; e.currentTarget.style.color="rgba(155,170,212,0.55)"; }}>
-                    {s}
-                  </button>
-                ))}
-              </div>
+            <div style={{ display:"flex", flexDirection:"column", gap:"14px" }}>
+              {[["UBICACION","Santiago de los Caballeros\nRepublica Dominicana"],["TELEFONO","(809) 555-0000\nEmergencias 24 horas"],["CORREO","info@selceservicios.com"],["HORARIO","Lun-Vie 8am-6pm\nSab 8am-2pm · 24h emergencias"]].map(([k,v]) => (
+                <div key={k}>
+                  <div className="mm" style={{ fontSize:"10px", color:"#C8900A", letterSpacing:"1.5px", marginBottom:"5px" }}>{k}</div>
+                  <div style={{ fontSize:"14px", color:"rgba(232,234,246,0.7)", lineHeight:1.7, whiteSpace:"pre-line" }}>{v}</div>
+                </div>
+              ))}
             </div>
           </div>
-
-          {/* Right — Form */}
-          <div style={{ flex:1, padding:"clamp(40px,6vw,72px) clamp(18px,4%,40px)", minWidth:"280px" }}>
+          <div style={{ padding:"clamp(32px,5vw,56px) clamp(16px,4%,40px) 0" }}>
             {sent ? (
-              <div style={{ height:"100%", display:"flex", flexDirection:"column", justifyContent:"center", animation:"fadein .35s ease" }}>
-                <span className="tag" style={{ borderColor:"#22C55E", color:"#22C55E", marginBottom:"20px" }}>TRANSMISIÓN EXITOSA</span>
-                <h3 style={{ fontFamily:"'Bebas Neue','Arial Black',Impact,sans-serif", fontSize:"clamp(48px,7vw,80px)", color:"#fff", letterSpacing:"2px", lineHeight:0.88 }}>MENSAJE<br/>RECIBIDO.</h3>
-                <p style={{ fontSize:"13px", color:"var(--text)", marginTop:"20px", lineHeight:1.85 }}>Respondemos en menos de 2 horas en días hábiles.<br/>Para emergencias llama al (809) 555-0000.</p>
+              <div style={{ animation:"up .4s both" }}>
+                <div style={{ width:"48px", height:"48px", background:"rgba(34,197,94,0.1)", border:"1px solid rgba(34,197,94,0.3)", display:"flex", alignItems:"center", justifyContent:"center", marginBottom:"20px" }}>
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="#22C55E"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg>
+                </div>
+                <h3 className="bb" style={{ fontSize:"clamp(36px,5vw,56px)", color:"#fff", letterSpacing:"1px", marginBottom:"12px" }}>MENSAJE ENVIADO!</h3>
+                <p style={{ fontSize:"14px", color:"rgba(232,234,246,0.55)", lineHeight:1.8 }}>Respondemos en menos de 2 horas en dias habiles. Emergencias: (809) 555-0000.</p>
               </div>
             ) : (
               <div>
-                <span className="tag" style={{ marginBottom:"clamp(24px,3vw,36px)", display:"inline-block" }}>FORMULARIO DE SOLICITUD</span>
-                <div style={{ display:"flex", flexDirection:"column", gap:"clamp(16px,2.5vw,22px)", maxWidth:"520px" }}>
-
-                  <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:"clamp(12px,2vw,18px)" }} className="form-name-tel">
-                    {[["nombre","// NOMBRE COMPLETO","Juan García"],["tel","// TELÉFONO","809-000-0000"]].map(([k,l,ph]) => (
-                      <div key={k}>
-                        <label className="ann" style={{ display:"block", marginBottom:"6px" }}>{l}</label>
-                        <input className="inp" placeholder={ph} value={form[k]} onChange={e => setForm({...form,[k]:e.target.value})}/>
-                      </div>
-                    ))}
+                <span className="tag" style={{ marginBottom:"24px", display:"inline-block" }}>Formulario de solicitud</span>
+                <div style={{ display:"flex", flexDirection:"column", gap:"16px" }}>
+                  <div className="form2col" style={{ gap:"12px" }}>
+                    <div>
+                      <label className="mm" style={{ fontSize:"10px", color:"rgba(232,234,246,0.3)", letterSpacing:"1px", display:"block", marginBottom:"6px" }}>NOMBRE</label>
+                      <input className="inp" style={{ padding:"18px 16px" }} placeholder="Juan Garcia" value={form.nombre} onChange={e => setForm({...form,nombre:e.target.value})}/>
+                    </div>
+                    <div>
+                      <label className="mm" style={{ fontSize:"10px", color:"rgba(232,234,246,0.3)", letterSpacing:"1px", display:"block", marginBottom:"6px" }}>TELEFONO</label>
+                      <input className="inp" style={{ padding:"18px 16px" }} placeholder="809-000-0000" value={form.tel} onChange={e => setForm({...form,tel:e.target.value})}/>
+                    </div>
                   </div>
-
                   <div>
-                    <label className="ann" style={{ display:"block", marginBottom:"6px" }}>// SERVICIO REQUERIDO</label>
-                    <select className="inp" value={form.servicio} onChange={e => setForm({...form,servicio:e.target.value})} style={{ cursor:"pointer" }}>
-                      <option value="" style={{ background:"#05091C" }}>Seleccionar servicio...</option>
-                      {services.map(s => <option key={s.name} value={s.name} style={{ background:"#05091C" }}>{s.name}</option>)}
+                    <label className="mm" style={{ fontSize:"10px", color:"rgba(232,234,246,0.3)", letterSpacing:"1px", display:"block", marginBottom:"6px" }}>SERVICIO</label>
+                    <select className="inp" style={{ padding:"18px 16px" }} value={form.servicio} onChange={e => setForm({...form,servicio:e.target.value})}>
+                      <option value="">Seleccionar servicio...</option>
+                      {SVCS.map(s => <option key={s.n} value={s.t}>{s.t}</option>)}
                     </select>
                   </div>
-
-                  <div>
-                    <label className="ann" style={{ display:"block", marginBottom:"6px" }}>// DESCRIPCIÓN DEL TRABAJO</label>
-                    <textarea className="inp" rows={4} placeholder="Describe tu necesidad eléctrica con el mayor detalle posible..." value={form.msg} onChange={e => setForm({...form,msg:e.target.value})} style={{ resize:"vertical" }}/>
+                  <div style={{ flex:1 }}>
+                    <label className="mm" style={{ fontSize:"10px", color:"rgba(232,234,246,0.3)", letterSpacing:"1px", display:"block", marginBottom:"6px" }}>DESCRIPCION</label>
+                    <textarea className="inp" rows={8} placeholder="Describe tu necesidad electrica..." value={form.msg} onChange={e => setForm({...form,msg:e.target.value})} style={{ resize:"none", width:"100%" }}/>
                   </div>
-
                   <div style={{ display:"flex", alignItems:"center", gap:"20px", flexWrap:"wrap" }}>
-                    <button className="btn-gold" onClick={() => { if(form.nombre && form.tel) setSent(true); }}>
-                      ENVIAR SOLICITUD →
-                    </button>
-                    <span className="ann">RESPUESTA &lt; 2H DÍAS HÁBILES</span>
+                    <button className="bp" style={{ padding:"16px 32px", fontSize:"16px" }} onClick={() => { if(form.nombre && form.tel) setSent(true); }}>Enviar Solicitud</button>
+                    <span className="mm" style={{ fontSize:"10px", color:"rgba(232,234,246,0.3)", letterSpacing:"1px" }}>RESPUESTA &lt; 2H</span>
                   </div>
                 </div>
               </div>
@@ -757,16 +527,20 @@ export default function SelceFinal() {
         </div>
       </section>
 
-      {/* ═══════════════════════════════ FOOTER ══════════════════════════════ */}
-      <footer style={{ borderTop:"1px solid rgba(43,45,160,0.2)", padding:"clamp(16px,2.5vw,24px) clamp(18px,4%,48px)", background:"#05091C", display:"flex", alignItems:"center", justifyContent:"space-between", flexWrap:"wrap", gap:"14px" }} className="footer-row">
+      {/* FOOTER */}
+      <footer style={{ padding:"clamp(16px,2.5vw,24px) clamp(16px,4%,48px)", display:"flex", alignItems:"center", justifyContent:"space-between", flexWrap:"wrap", gap:"12px" }}>
         <div style={{ display:"flex", alignItems:"center", gap:"10px" }}>
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="#B57F0C"><path d="M13 2L4.5 13.5H11L10 22L19.5 10.5H13Z"/></svg>
-          <span style={{ fontFamily:"'Bebas Neue','Arial Black',Impact,sans-serif", letterSpacing:"5px", fontSize:"16px", color:"#fff" }}>SELCE SERVICIOS</span>
+          <Bolt/>
+          <span className="bb" style={{ fontSize:"16px", letterSpacing:"4px", color:"#fff" }}>SELCE SERVICIOS</span>
         </div>
-        <span className="ann">© {new Date().getFullYear()} · SANTIAGO DE LOS CABALLEROS · REPÚBLICA DOMINICANA</span>
-        <span className="ann" style={{ color:"#B57F0C", animation:"blink 3s infinite" }}>● SISTEMA EN LÍNEA</span>
+        <span className="mm" style={{ fontSize:"10px", color:"rgba(232,234,246,0.25)", letterSpacing:"1px" }}>
+          {new Date().getFullYear()} · SANTIAGO · RD
+        </span>
+        <div style={{ display:"flex", alignItems:"center", gap:"6px" }}>
+          <span style={{ width:"6px", height:"6px", borderRadius:"50%", background:"#22C55E", display:"inline-block", animation:"blink 2.5s infinite" }}/>
+          <span className="mm" style={{ fontSize:"10px", color:"rgba(34,197,94,0.6)", letterSpacing:"1px" }}>SISTEMA EN LINEA</span>
+        </div>
       </footer>
-
     </div>
   );
 }
